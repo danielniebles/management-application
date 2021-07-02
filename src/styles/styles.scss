@@ -1,0 +1,74 @@
+$main-text-color: #294661;
+
+.main-text-field {
+  .v-input__control {
+    .v-input__slot {
+      border: #a2a2a2;
+      border-radius: 5px;
+      .v-text-field__slot {
+        .v-label {
+          color: #8797a7;
+        }
+      }
+    }
+    .v-text-field__details{
+      margin-bottom: 0px;
+    }
+  }
+}
+
+.card-title {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 29px;
+  color: $main-text-color;
+}
+
+.card-content {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 22px;
+  color: $main-text-color;
+}
+
+.main-card-list {
+  .v-list-item {
+    min-height: 20px;
+    padding: 0px;
+  }
+}
+
+.main-card {
+  .v-card__title {
+    padding: 16px 16px 0px;
+    .v-list-item {
+      padding: 0px;
+    }
+  }
+}
+
+.expansion-panel-header {
+  .icon {
+    order: 0;
+    color: $main-text-color;
+  }
+  .header {
+    order: 1;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 22px;
+    color: $main-text-color;
+  }
+}
+
+.header {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 22px;
+  color: $main-text-color;
+}
+
