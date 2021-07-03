@@ -1,25 +1,27 @@
 <template>
-  <v-card class="mx-auto" tile>
+  <v-card class="mx-auto main-card" tile>
     <v-card-title>
-      <v-list-item style="padding: 0px">
-        <span class="text-h6 font-weight-light">{{ candidatesInfo.name }}</span>
-
+      <v-list-item>
+        <span class="card-title">{{ candidatesInfo['Name'][0]['FormattedName'] }}</span>
         <v-row align="center" justify="end" class="mr-1">
           <span class="subheading">Precisión: 10%</span>
         </v-row>
       </v-list-item>
     </v-card-title>
 
-    <v-card-text class="text-h6 font-weight-light">
-      <v-list dense>
-        <v-list-item style="padding: 0px">
-          <span class="subheading">{{ candidatesInfo.country }}</span>
+    <v-card-text class="card-content">
+      <v-list class="main-card-list">
+        <v-list-item>
+          <span class="subheading">{{ candidatesInfo['ResumeCountry'][0]['Country'] }}</span>
         </v-list-item>
-        <v-list-item style="padding: 0px">
-          <span class="subheading">{{ candidatesInfo.position }}</span>
+        <v-list-item>
+          <span class="subheading">{{ candidatesInfo.JobProfile }}</span>
         </v-list-item>
-        <v-list-item style="padding: 0px">
-          <span class="subheading">{{ candidatesInfo.time }}</span>
+        <v-list-item>
+          <span class="subheading">{{ candidatesInfo['WorkedPeriod'][0]['TotalExperienceInYear'] }}</span>
+        </v-list-item>
+        <v-list-item>
+          <a :href="candidatesInfo['fileUrl']" class="subheading" target="_blank">Hoja de vida</a>
         </v-list-item>
       </v-list>
     </v-card-text>
