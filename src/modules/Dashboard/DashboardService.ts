@@ -8,18 +8,11 @@ export class DashboardService {
         this.baseUrl = `${process.env.VUE_APP_VERIFIKAR_API}/rchilli/query`;
     }
 
-    async getFiltersResult(searchString: string) {       
+    async getFiltersResult(searchObject: any) {               
         const config: AxiosRequestConfig = {
             url: this.baseUrl,
             method: 'post',
-            data: {
-                JobProfile: searchString,
-                SegregatedQualification: [{
-                    Degree: {
-                        DegreeName: 'Bachiller'
-                    }
-                }]
-            }
+            data: searchObject
         }
         const response = await axios.request(config)
         return response.data

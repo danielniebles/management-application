@@ -20,6 +20,9 @@
         <v-list-item>
           <span class="subheading">{{ candidatesInfo['WorkedPeriod'][0]['TotalExperienceInYear'] }}</span>
         </v-list-item>
+        <v-list-item>
+          <a :href="candidatesInfo['fileUrl']" class="subheading" target="_blank">Hoja de vida</a>
+        </v-list-item>
       </v-list>
     </v-card-text>
   </v-card>

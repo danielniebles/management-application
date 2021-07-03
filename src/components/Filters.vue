@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { Component } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 import Vuetify from "vuetify";
 import Vue from "vue";
 import { eventBus } from "../main";
@@ -39,6 +39,8 @@ Vue.use(Vuetify);
   name: "Filters",
 })
 export default class Filters extends Vue {
+  @Prop() private cleanFlag!: boolean;
+  
   emitObject = {};
   operations = [
     {
@@ -54,6 +56,7 @@ export default class Filters extends Vue {
         {
           rchilliKey: "LastName",
           displayName: "Apellido",
+          value: "",
         },
       ],
     },
@@ -65,10 +68,12 @@ export default class Filters extends Vue {
         {
           rchilliKey: "Degree_DegreeName",
           displayName: "Nivel educativo",
+          value: "",
         },
         {
-          rchilliKey: "Profession",
-          displayName: "Profesión",
+          rchilliKey: "Institution_Name",
+          displayName: "Universidad",
+          value: "",
         },
       ],
     },
@@ -80,15 +85,13 @@ export default class Filters extends Vue {
         {
           rchilliKey: "Employer_EmployerName",
           displayName: "Empresa",
+          value: "",
         },
         {
           rchilliKey: "JobProfile_Title",
           displayName: "Cargo",
-        },
-        {
-          rchilliKey: "YearsOfExperience",
-          displayName: "Años de experiencia",
-        },
+          value: "",
+        }
       ],
     },
   ];
@@ -109,12 +112,18 @@ export default class Filters extends Vue {
       value: this.operations[index].options[subIndex].value,
       key: this.operations[index].options[subIndex].rchilliKey,
     };
-    console.log(
-      subIndex,
-      index,
-      this.operations[index].options[subIndex].value
-    );
+    
     eventBus.$emit("filterAdded", this.emitObject);
+  }
+
+  @Watch('cleanFlag')
+  cleanFields(){
+    this.operations.forEach( (operation) => {
+      operation.options.forEach( (option) => {
+        option.value = ""
+      })
+    })
+    eventBus.$emit('cleanedFields')
   }
 }
 </script>
