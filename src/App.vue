@@ -5,7 +5,7 @@
         <router-view />
       </ServiceProvider>
     </v-main>
-    <v-navigation-drawer permanent app>
+    <v-navigation-drawer permanent app width="200">
       <v-list>
         <v-list-item class="px-2">
           <v-img

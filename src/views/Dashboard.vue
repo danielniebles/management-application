@@ -84,14 +84,7 @@ export default class Dashboard extends Vue {
 
     eventBus.$on("onSearchEnter", async (searchPattern: string) => {
       this.candidates = await this.dashboardService.getFiltersResult({
-        ["JobProfile"]: searchPattern,
-        //   SegregatedQualification: [
-        //   {
-        //     Degree: {
-        //       DegreeName: "Bachiller",
-        //     },
-        //   },
-        // ],
+        ["JobProfile"]: searchPattern
       });
       this.topSearch = searchPattern;
       this.page = 1;
@@ -102,6 +95,7 @@ export default class Dashboard extends Vue {
       this.candidates.length = 0;
       this.candidates = candidates;
       this.length = Math.ceil(this.candidates.length / this.perPage);
+      this.page = 1;
     });
   }
 
