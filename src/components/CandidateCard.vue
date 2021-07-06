@@ -12,13 +12,13 @@
     <v-card-text class="card-content">
       <v-list class="main-card-list">
         <v-list-item>
-          <span class="subheading">{{ candidatesInfo['ResumeCountry'][0]['Country'] }}</span>
+          <span class="subheading">{{ Country }}</span>
         </v-list-item>
         <v-list-item>
           <span class="subheading">{{ candidatesInfo.JobProfile }}</span>
         </v-list-item>
-        <v-list-item>
-          <span class="subheading">{{ candidatesInfo['WorkedPeriod'][0]['TotalExperienceInYear'] }}</span>
+        <v-list-item v-show="candidatesInfo['WorkedPeriod'][0]['TotalExperienceInYear']">
+          <span class="subheading">{{ candidatesInfo['WorkedPeriod'][0]['TotalExperienceInYear'] }} Años de experiencia</span>
         </v-list-item>
         <v-list-item>
           <a :href="candidatesInfo['fileUrl']" class="subheading" target="_blank">Hoja de vida</a>
@@ -38,7 +38,11 @@ Vue.use(Vuetify);
   name: "CandidatesCard",
 })
 export default class CanditateCard extends Vue {
-  @Prop() private candidatesInfo!: string;
+  @Prop() private candidatesInfo!: any;
+
+  get Country(){
+    return this.candidatesInfo['ResumeCountry'][0]['Country'] || 'Colombia'
+  }
 }
 </script>
 
