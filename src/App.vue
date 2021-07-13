@@ -5,7 +5,7 @@
         <router-view />
       </ServiceProvider>
     </v-main>
-    <v-navigation-drawer permanent app width="200">
+    <v-navigation-drawer permanent app width="200" v-if="this.$router.currentRoute.name !== 'Login'">
       <v-list>
         <v-list-item class="px-2">
           <v-img
@@ -55,7 +55,12 @@ import ServiceProvider from "./providers/ServiceProvider.vue";
     ServiceProvider,
   },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  mounted(){
+    console.log(this.$router.currentRoute.name);
+      }
+
+}
 </script>
 
 <style lang="scss">

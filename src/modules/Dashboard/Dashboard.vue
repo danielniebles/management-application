@@ -44,13 +44,13 @@
 
 <script lang="ts" >
 import { Component, Inject } from "vue-property-decorator";
-import FiltersPanel from "../components/FiltersPanel.vue";
-import CandidateCard from "../components/CandidateCard.vue";
-import MainSearchPanel from "../components/MainSearchPanel.vue";
+import FiltersPanel from "./components/FiltersPanel.vue";
+import CandidateCard from "./components/CandidateCard.vue";
+import MainSearchPanel from "./components/MainSearchPanel.vue";
 import Vuetify from "vuetify";
 import Vue from "vue";
 import { DashboardService } from "@/modules/Dashboard/DashboardService";
-import { eventBus } from "../main";
+import { eventBus } from "../../main";
 
 Vue.use(Vuetify);
 @Component({

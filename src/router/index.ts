@@ -1,20 +1,14 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
-import Home from "../views/Home.vue";
-import Filters from "../components/Filters.vue";
-import FiltersPanel from "../components/FiltersPanel.vue";
-import CandidateCard from "../components/CandidateCard.vue";
-import Dashboard from "../views/Dashboard.vue";
+import FiltersPanel from "../modules/Dashboard/components/FiltersPanel.vue";
+import CandidateCard from "../modules/Dashboard/components/CandidateCard.vue";
+import Dashboard from "../modules/Dashboard/Dashboard.vue";
+import Login from "../modules/Login/Login.vue"
 
 
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
-  {
-    path: "/",
-    name: "Home",
-    component: Home,
-  },
   {
     path: "/filters",
     name: "Filters",
@@ -29,6 +23,16 @@ const routes: Array<RouteConfig> = [
     path: "/dashboard",
     name: "Dashboard",
     component: Dashboard,
+  },
+  {
+    path: "/login",
+    name: "Login",
+    component: Login,
+  },
+  {
+    path: "/",
+    redirect: { name: "Login"}
+
   }
 ];
 
