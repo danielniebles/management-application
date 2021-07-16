@@ -127,6 +127,7 @@ export default class FiltersPanel extends Vue {
     // })    
 
     if (Object.keys(dataObject).length !== 0){ 
+      eventBus.$emit("searchFromFilters");
       const response = await this.dashboardService.getFiltersResult(dataObject);
       eventBus.$emit("searchFromFilters", response);
     }

@@ -16,6 +16,7 @@
 import Vuetify from "vuetify";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
+import Snackbar from "../../shared/components/Snackbar/Snackbar.vue"
 
 Vue.use(Vuetify);
 @Component({
@@ -39,7 +40,7 @@ export default class LoginButton extends Vue {
     this.$emit(this.actionType, idToken);
   }
   OnGoogleAuthFail(error: string) {
-    console.log(error);
+    Snackbar.popError('Error de autenticación de Google');
   }
 
 }

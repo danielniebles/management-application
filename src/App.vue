@@ -4,6 +4,7 @@
       <ServiceProvider>
         <router-view />
       </ServiceProvider>
+      <Snackbar></Snackbar>
     </v-main>
     <v-navigation-drawer permanent app width="200" v-if="this.$router.currentRoute.name !== 'Login'">
       <v-list>
@@ -54,11 +55,13 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import ServiceProvider from "./providers/ServiceProvider.vue";
+import Snackbar from "./modules/shared/components/Snackbar/Snackbar.vue"
 
 @Component({
   name: "App",
   components: {
     ServiceProvider,
+    Snackbar
   },
 })
 export default class App extends Vue {

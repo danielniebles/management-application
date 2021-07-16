@@ -32,6 +32,7 @@ import { Component } from "vue-property-decorator";
 import Vuetify from "vuetify";
 import Vue from "vue";
 import EventBus from "@/EventBus";
+import { eventBus } from "../../../../main"
 
 Vue.use(Vuetify);
 @Component({
@@ -44,10 +45,8 @@ export default class Snackbar extends Vue {
   snackbarColor = "";
 
   mounted() {
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    console.log('snack');
-    
-    EventBus.$on('SnackData', (payload: any) => {
+    /* eslint-disable  @typescript-eslint/no-explicit-any */    
+    eventBus.$on('SnackData', (payload: any) => {
       this.message = payload.msg;
       this.icon = payload.icon;
       this.snackbarColor = payload.color;
@@ -56,7 +55,7 @@ export default class Snackbar extends Vue {
   }
 
   static popSuccess(msg: string) {
-    EventBus.$emit('SnackData', {
+    eventBus.$emit('SnackData', {
       msg,
       icon: 'mdi-check',
       color: '#69d1c5'
@@ -64,15 +63,15 @@ export default class Snackbar extends Vue {
   }
 
   static popWarning(msg: string) {
-    EventBus.$emit('SnackData', {
+    eventBus.$emit('SnackData', {
       msg,
       icon: 'mdi-alert',
       color: '#f7a072'
     });
   }
 
-  static popError(msg: string) {
-    EventBus.$emit('SnackData', {
+  static popError(msg: string) {    
+    eventBus.$emit('SnackData', {
       msg,
       icon: 'mdi-close-circle',
       color: '#f39a9d'
@@ -80,7 +79,7 @@ export default class Snackbar extends Vue {
   }
 
   static popInfo(msg: string) {
-    EventBus.$emit('SnackData', {
+    eventBus.$emit('SnackData', {
       msg,
       icon: 'mdi-information',
       color: '#9cc4d5'
@@ -92,3 +91,24 @@ export default class Snackbar extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@media (max-width: 770px) {
+  .snackbar-msg {
+    font-size: 2vw;
+  }
+}
+
+@media (max-width: 450px) {
+  .snackbar-msg {
+    font-size: 3.3vw;
+  }
+}
+
+::v-deep {
+  .v-snack__wrapper {
+    min-width: 0px !important;
+    max-width: 100vw !important;
+  }
+}
+</style>

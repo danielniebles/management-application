@@ -63,7 +63,7 @@ export default class Login extends Vue {
       .dispatch("register", idToken)
       .then(() => this.$router.push({ name: "Dashboard" }))
       .catch(error => {
-        console.log(error.response.data.message); 
+        Snackbar.popError('Ya estás registrado, por favor inicia sesión')
       });
   }
 }
