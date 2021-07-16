@@ -8,7 +8,9 @@ export class DashboardService {
         this.baseUrl = `${process.env.VUE_APP_VERIFIKAR_API}/rchilli/query`;
     }
 
-    async getFiltersResult(searchObject: any) {               
+    async getFiltersResult(searchObject: any) {
+        console.log(searchObject);
+                    
         const config: AxiosRequestConfig = {
             url: this.baseUrl,
             method: 'post',

@@ -30,10 +30,6 @@
                 :key="candidate.key"
                 :candidatesInfo="candidate"
               />
-              <!-- <v-skeleton-loader
-                v-bind="attrs"
-                type="card-heading, list-item-three-line"
-              ></v-skeleton-loader> -->
             </v-col>
           </v-row>
         </v-col>
@@ -51,6 +47,7 @@ import Vuetify from "vuetify";
 import Vue from "vue";
 import { DashboardService } from "@/modules/Dashboard/DashboardService";
 import { eventBus } from "../../main";
+import { mapGetters } from 'vuex'
 
 Vue.use(Vuetify);
 @Component({
@@ -60,25 +57,21 @@ Vue.use(Vuetify);
     CandidateCard,
     MainSearchPanel,
   },
+  computed: mapGetters(['loggedIn'])
 })
 export default class Dashboard extends Vue {
   @Inject() dashboardService!: DashboardService;
   candidates = [];
+  
   page = 1;
   perPage = 4;
   length = 0;
   topSearch = "";
 
   async mounted() {
+    
     this.candidates = await this.dashboardService.getFiltersResult({
-      JobProfile: "Ingeniero",
-      // SegregatedQualification: [
-      //   {
-      //     Degree: {
-      //       DegreeName: "Bachiller",
-      //     },
-      //   },
-      // ],
+      JobProfile: "Ingeniero"
     });
     this.length = Math.ceil(this.candidates.length / this.perPage);
 

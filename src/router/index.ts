@@ -10,19 +10,10 @@ Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
-    path: "/filters",
-    name: "Filters",
-    component: FiltersPanel,
-  },
-  {
-    path: "/card",
-    name: "Candidate",
-    component: CandidateCard,
-  },
-  {
     path: "/dashboard",
     name: "Dashboard",
     component: Dashboard,
+    meta: { requiresAuth: true }
   },
   {
     path: "/login",
@@ -41,5 +32,14 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
+
+router.beforeEach((to, from, next) => {
+  const loggedIn = localStorage.getItem('user');
+
+  if (to.matched.some(record => record.meta.requiresAuth) && !loggedIn) {
+    return next('/login');
+  }
+  next();
+})
 
 export default router;

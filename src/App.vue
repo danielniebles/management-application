@@ -39,6 +39,12 @@
             </v-list-item-icon>
             <v-list-item-title>Cuenta</v-list-item-title>
           </v-list-item>
+          <v-list-item link @click="logout">
+            <v-list-item-icon>
+              <v-icon>mdi-logout</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Cerrar sesión</v-list-item-title>
+          </v-list-item>
         </v-list>
       </template>
     </v-navigation-drawer>
@@ -46,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Provide, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import ServiceProvider from "./providers/ServiceProvider.vue";
 
 @Component({
@@ -56,10 +62,9 @@ import ServiceProvider from "./providers/ServiceProvider.vue";
   },
 })
 export default class App extends Vue {
-  mounted(){
-    console.log(this.$router.currentRoute.name);
-      }
-
+  logout(){
+    this.$store.dispatch('logout')
+  }
 }
 </script>
 
