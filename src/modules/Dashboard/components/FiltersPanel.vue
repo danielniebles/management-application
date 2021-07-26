@@ -26,7 +26,7 @@ import { Component, Prop, Inject } from "vue-property-decorator";
 import Filters from "./Filters.vue";
 import Vuetify from "vuetify";
 import Vue from "vue";
-import { eventBus } from "../main"
+import { eventBus } from "../../../main"
 import { DashboardService } from "@/modules/Dashboard/DashboardService";
 
 Vue.use(Vuetify);
@@ -127,6 +127,7 @@ export default class FiltersPanel extends Vue {
     // })    
 
     if (Object.keys(dataObject).length !== 0){ 
+      eventBus.$emit("searchFromFilters");
       const response = await this.dashboardService.getFiltersResult(dataObject);
       eventBus.$emit("searchFromFilters", response);
     }

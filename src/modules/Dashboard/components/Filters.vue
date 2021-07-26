@@ -32,7 +32,7 @@
 import { Component, Prop, Watch } from "vue-property-decorator";
 import Vuetify from "vuetify";
 import Vue from "vue";
-import { eventBus } from "../main";
+import { eventBus } from "../../../main";
 
 Vue.use(Vuetify);
 @Component({
