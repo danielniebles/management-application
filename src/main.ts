@@ -24,6 +24,8 @@ new Vue({
       error => {
         if(error.response.status === 401) {
           this.$store.dispatch('logout');
+          eventBus.$emit('unauthorized')
+
         }
         return Promise.reject(error)
       }

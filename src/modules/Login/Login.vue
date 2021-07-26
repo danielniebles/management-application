@@ -41,6 +41,7 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import LoginButton from "../Login/components/LoginButton.vue";
 import Snackbar from "../shared/components/Snackbar/Snackbar.vue";
+import { eventBus } from "@/main";
 
 Vue.use(Vuetify);
 @Component({
@@ -56,15 +57,25 @@ export default class Login extends Vue {
   login(idToken: string) {
     this.$store
       .dispatch("login", idToken)
-      .then(() => this.$router.push({ name: "Dashboard" }));
+      .then(() => this.$router.push({ name: "Dashboard" }))
+      .catch(error => {
+        Snackbar.popError('Regístrate para poder continuar')
+      });
   }
   register(idToken: string){
     this.$store
       .dispatch("register", idToken)
       .then(() => this.$router.push({ name: "Dashboard" }))
       .catch(error => {
+        console.log(error);
+        
         Snackbar.popError('Ya estás registrado, por favor inicia sesión')
       });
+  }
+  created(){
+    eventBus.$on('unauthorized', () => {
+      Snackbar.popError('Sesión expirada')
+    })
   }
 }
 </script>

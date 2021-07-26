@@ -37,7 +37,7 @@ export default new Vuex.Store({
           idToken: googleToken,
         })
         .then(({ data }) => {
-          console.log(data);
+          commit("SET_USER_DATA", data);
         });
     },
     logout({ commit }, payload) {
