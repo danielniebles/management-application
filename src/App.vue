@@ -4,8 +4,9 @@
       <ServiceProvider>
         <router-view />
       </ServiceProvider>
+      <Snackbar></Snackbar>
     </v-main>
-    <v-navigation-drawer permanent app width="200">
+    <v-navigation-drawer permanent app width="200" v-if="this.$router.currentRoute.name !== 'Login'">
       <v-list>
         <v-list-item class="px-2">
           <v-img
@@ -39,6 +40,12 @@
             </v-list-item-icon>
             <v-list-item-title>Cuenta</v-list-item-title>
           </v-list-item>
+          <v-list-item link @click="logout">
+            <v-list-item-icon>
+              <v-icon>mdi-logout</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Cerrar sesión</v-list-item-title>
+          </v-list-item>
         </v-list>
       </template>
     </v-navigation-drawer>
@@ -46,16 +53,22 @@
 </template>
 
 <script lang="ts">
-import { Component, Provide, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import ServiceProvider from "./providers/ServiceProvider.vue";
+import Snackbar from "./modules/shared/components/Snackbar/Snackbar.vue"
 
 @Component({
   name: "App",
   components: {
     ServiceProvider,
+    Snackbar
   },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  logout(){
+    this.$store.dispatch('logout')
+  }
+}
 </script>
 
 <style lang="scss">

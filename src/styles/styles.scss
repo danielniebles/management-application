@@ -11,7 +11,7 @@ $main-text-color: #294661;
         }
       }
     }
-    .v-text-field__details{
+    .v-text-field__details {
       margin-bottom: 0px;
     }
   }
@@ -72,3 +72,10 @@ $main-text-color: #294661;
   color: $main-text-color;
 }
 
+.login-card-title {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 17px;
+  line-height: 18px;
+  color: #ffc700;
+}
