@@ -43,23 +43,23 @@ export default class Filters extends Vue {
   
   emitObject = {};
   operations = [
-    {
-      rchilliKey: "PersonalInformation",
-      displayName: "Información Personal",
-      rchilliType: "string",
-      options: [
-        {
-          rchilliKey: "FirstName",
-          displayName: "Primer Nombre",
-          value: "",
-        },
-        {
-          rchilliKey: "LastName",
-          displayName: "Apellido",
-          value: "",
-        },
-      ],
-    },
+    // {
+    //   rchilliKey: "PersonalInformation",
+    //   displayName: "Información Personal",
+    //   rchilliType: "string",
+    //   options: [
+    //     {
+    //       rchilliKey: "FirstName",
+    //       displayName: "Primer Nombre",
+    //       value: "",
+    //     },
+    //     {
+    //       rchilliKey: "LastName",
+    //       displayName: "Apellido",
+    //       value: "",
+    //     },
+    //   ],
+    // },
     {
       rchilliKey: "SegregatedQualification",
       displayName: "Formación",
@@ -83,13 +83,20 @@ export default class Filters extends Vue {
       rchilliType: "arrayObject",
       options: [
         {
-          rchilliKey: "Employer_EmployerName",
-          displayName: "Empresa",
-          value: "",
-        },
-        {
           rchilliKey: "JobProfile_Title",
           displayName: "Cargo",
+          value: "",
+        }
+      ],
+    },
+    {
+      rchilliKey: "SegregatedSkill",
+      displayName: "Aptitudes",
+      rchilliType: "arrayObject",
+      options: [
+        {
+          rchilliKey: "Skill",
+          displayName: "Aptitud",
           value: "",
         }
       ],
@@ -108,7 +115,7 @@ export default class Filters extends Vue {
 
   onMouseUp(subIndex: number, index: number) {
     this.emitObject = {
-      parentKey: this.operations[index].rchilliKey,
+    parentKey: this.operations[index].rchilliKey,
       value: this.operations[index].options[subIndex].value,
       key: this.operations[index].options[subIndex].rchilliKey,
     };

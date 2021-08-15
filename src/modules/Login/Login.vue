@@ -54,11 +54,11 @@ export default class Login extends Vue {
   LOGIN = "login";
   REGISTER = "register";
 
-  login(idToken: string) {
+  login(idToken: string) {      
     this.$store
       .dispatch("login", idToken)
       .then(() => this.$router.push({ name: "Dashboard" }))
-      .catch(error => {
+      .catch(error => {        
         Snackbar.popError('Regístrate para poder continuar')
       });
   }
