@@ -2,7 +2,7 @@
   <v-container class="col-12">
     <v-row justify="center">
       <v-container>
-        <MainSearchPanel />
+        <MainSearchPanel @onSearchEnter="onSearchEnter"></MainSearchPanel>
       </v-container>
     </v-row>
     <v-divider></v-divider>
@@ -59,7 +59,7 @@ import { Component, Inject } from "vue-property-decorator";
 import FiltersPanel from "./components/FiltersPanel.vue";
 import CandidateCard from "./components/CandidateCard.vue";
 import MainSearchPanel from "./components/MainSearchPanel.vue";
-import Snackbar from "../shared/components/Snackbar/Snackbar.vue"
+import Snackbar from "../shared/components/Snackbar/Snackbar.vue";
 import Vuetify from "vuetify";
 import Vue from "vue";
 import { DashboardService } from "@/modules/Dashboard/DashboardService";
@@ -88,23 +88,11 @@ export default class Dashboard extends Vue {
 
   async mounted() {
     this.loadingData = true;
-
-    this.candidates = await this.dashboardService.getFiltersResult({
-      JobProfile: "Ingeniero",
-    });
+    // this.candidates = await this.dashboardService.getFiltersResult({
+    //   JobProfile: "Ingeniero",
+    // });
     this.length = Math.ceil(this.candidates.length / this.perPage);
     this.loadingData = false;
-
-    eventBus.$on("onSearchEnter", async (searchPattern: string) => {
-      this.loadingData = true;
-      this.candidates = await this.dashboardService.getFiltersResult({
-        ["JobProfile"]: searchPattern,
-      });
-      this.topSearch = searchPattern;
-      this.page = 1;
-      this.length = Math.ceil(this.candidates.length / this.perPage);
-      this.loadingData = false;
-    });
 
     eventBus.$on("searchFromFilters", (candidates: any) => {
       if (candidates) {
@@ -113,17 +101,28 @@ export default class Dashboard extends Vue {
         this.length = Math.ceil(this.candidates.length / this.perPage);
         this.page = 1;
         this.loadingData = false;
+        
       } else {
         this.loadingData = true;
       }
     });
-
   }
 
   get shownCandidates() {
     const { page, perPage, candidates } = this;
     const number = Math.ceil(candidates.length / length);
     return candidates.slice((page - 1) * perPage, page * perPage);
+  }
+
+  async onSearchEnter(searchPattern: string) {
+    this.loadingData = true;
+    this.candidates = await this.dashboardService.getFiltersResult({
+      ["DetailResume"]: searchPattern,
+    });    
+    this.topSearch = searchPattern;
+    this.page = 1;
+    this.length = Math.ceil(this.candidates.length / this.perPage);
+    this.loadingData = false;
   }
 }
 </script>

@@ -15,7 +15,7 @@
           <span class="subheading">{{ Country }}</span>
         </v-list-item>
         <v-list-item>
-          <span class="subheading">{{ candidatesInfo.JobProfile }}</span>
+          <span class="subheading">{{ candidatesInfo.currentJobProfile }}</span>
         </v-list-item>
         <v-list-item v-show="candidatesInfo['WorkedPeriod'][0]['TotalExperienceInYear']">
           <span class="subheading">{{ candidatesInfo['WorkedPeriod'][0]['TotalExperienceInYear'] }} Años de experiencia</span>
