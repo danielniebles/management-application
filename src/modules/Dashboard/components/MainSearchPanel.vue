@@ -16,7 +16,7 @@
         </v-menu>
       </v-col> -->
       <v-col cols="12" justify="end">
-        <v-text-field solo outlined @keyup.enter="onEnter" v-model="searchPattern" prefix="Profesión | "></v-text-field>
+        <v-text-field solo outlined @keyup.enter="onEnter" v-model="searchPattern" prefix="Buscar | "></v-text-field>
       </v-col>
     </v-row>
   </div>
@@ -38,8 +38,8 @@ export default class MainSearchPanel extends Vue {
   searchPattern = "";
   items = ["Profesión", "Nombre"];
   
-  onEnter(){
-    eventBus.$emit('onSearchEnter', this.searchPattern)
+  onEnter(){    
+    this.$emit('onSearchEnter', this.searchPattern);
   }
 
 };

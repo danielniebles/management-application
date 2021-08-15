@@ -116,7 +116,7 @@ export default class FiltersPanel extends Vue {
 
       this.mergedSearch.push(mergedObject)
       this.mergedSearch.push({
-        ['JobProfile']: this.topSearch
+        ['DetailResume']: this.topSearch
       })
     });
 
@@ -129,6 +129,8 @@ export default class FiltersPanel extends Vue {
     if (Object.keys(dataObject).length !== 0){ 
       eventBus.$emit("searchFromFilters");
       const response = await this.dashboardService.getFiltersResult(dataObject);
+      console.log(dataObject);
+      
       eventBus.$emit("searchFromFilters", response);
     }
   }
