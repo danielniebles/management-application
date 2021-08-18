@@ -43,23 +43,6 @@ export default class Filters extends Vue {
   
   emitObject = {};
   operations = [
-    // {
-    //   rchilliKey: "PersonalInformation",
-    //   displayName: "Información Personal",
-    //   rchilliType: "string",
-    //   options: [
-    //     {
-    //       rchilliKey: "FirstName",
-    //       displayName: "Primer Nombre",
-    //       value: "",
-    //     },
-    //     {
-    //       rchilliKey: "LastName",
-    //       displayName: "Apellido",
-    //       value: "",
-    //     },
-    //   ],
-    // },
     {
       rchilliKey: "SegregatedQualification",
       displayName: "Formación",
@@ -99,6 +82,23 @@ export default class Filters extends Vue {
           displayName: "Aptitud",
           value: "",
         }
+      ],
+    },
+    {
+      rchilliKey: "PersonalInformation",
+      displayName: "Información Personal",
+      rchilliType: "string",
+      options: [
+        {
+          rchilliKey: "FullName",
+          displayName: "Nombre",
+          value: "",
+        },
+        {
+          rchilliKey: "email",
+          displayName: "Correo",
+          value: "",
+        },
       ],
     },
   ];
