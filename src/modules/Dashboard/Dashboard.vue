@@ -37,6 +37,7 @@
                   v-for="candidate in shownCandidates[1]"
                   :key="candidate.key"
                   :candidatesInfo="candidate"
+                  @selectedCandidate="queryCandidate"
                 />
               </div>
               <v-skeleton-loader
@@ -134,6 +135,15 @@ export default class Dashboard extends Vue {
     this.page = 1;
     this.length = Math.ceil(this.candidates.length / this.perPage);
     this.loadingData = false;
+  }
+
+  queryCandidate(candidateName: any){
+    console.log(candidateName['fileUrl'])
+    this.$router.push({
+      name: "Candidate",
+      params: { fileUrl: candidateName["fileUrl"]}
+    })
+    
   }
 }
 </script>

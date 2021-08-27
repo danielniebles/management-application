@@ -54,7 +54,9 @@ export default class Login extends Vue {
   LOGIN = "login";
   REGISTER = "register";
 
-  login(idToken: string) {      
+  login(idToken: string) {
+    console.log(idToken);
+     
     this.$store
       .dispatch("login", idToken)
       .then(() => this.$router.push({ name: "Dashboard" }))

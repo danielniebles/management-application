@@ -18,6 +18,14 @@
         </v-list-item>
       </v-list>
     </v-card-text>
+    <v-card-actions>
+      <v-row justify="end" class="ma-1">
+      <v-btn @click="selectedCandidate">
+        <v-icon>mdi-eye</v-icon>
+      </v-btn>
+
+      </v-row>
+    </v-card-actions>
   </v-card>
 </template>
 
@@ -35,6 +43,12 @@ export default class CanditateCard extends Vue {
 
   get Country(){
     return this.candidatesInfo['ResumeCountry'][0]['Country'] || 'Colombia'
+  }
+
+  selectedCandidate(){
+    //console.log(this.candidatesInfo);
+    
+    this.$emit("selectedCandidate", this.candidatesInfo)
   }
 }
 </script>

@@ -168,15 +168,6 @@ export default class FiltersPanel extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.neumorphism {
-  .v-input__control {
-    .v-input__slot {
-      border-radius: 54px;
-      background: linear-gradient(145deg, #519e96, #44857e);
-      box-shadow: 32px 32px 61px #376b65, -32px -32px 61px #61bdb3;
-    }
-  }
-}
 
 </style>
 

@@ -4,6 +4,7 @@ import FiltersPanel from "../modules/Dashboard/components/FiltersPanel.vue";
 import CandidateCard from "../modules/Dashboard/components/CandidateCard.vue";
 import Dashboard from "../modules/Dashboard/Dashboard.vue";
 import Login from "../modules/Login/Login.vue"
+import Candidate from "../modules/Candidate/Candidate.vue"
 
 
 Vue.use(VueRouter);
@@ -19,6 +20,12 @@ const routes: Array<RouteConfig> = [
     path: "/login",
     name: "Login",
     component: Login,
+  },
+  {
+    path: "/candidate",
+    name: "Candidate",
+    component: Candidate,
+    props: true
   },
   {
     path: "/",
