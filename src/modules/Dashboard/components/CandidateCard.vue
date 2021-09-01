@@ -41,7 +41,8 @@ export default class CanditateCard extends Vue {
 
 <style>
 .card-content{
-  padding: 0;
+  padding: 0px 0px 0px 16px;
+
 }
 .list-title-content{
   padding: 0;
