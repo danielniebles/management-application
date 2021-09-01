@@ -1,22 +1,15 @@
 <template>
-  <v-card class="mx-auto main-card" tile>
+  <v-card class="mx-auto main-card card" tile>
     <v-card-title>
       <v-list-item>
-        <span class="card-title">{{ candidatesInfo['Name'][0]['FormattedName'] }}</span>
-        <v-row align="center" justify="end" class="mr-1">
-          <span class="subheading">Precisión: 10%</span>
-        </v-row>
+      <v-list-item-content class="list-title-content">
+        <v-list-item-title>{{ candidatesInfo['Name'][0]['FormattedName'] }}</v-list-item-title>
+        <v-list-item-subtitle>{{ candidatesInfo.currentJobProfile }}</v-list-item-subtitle>
+      </v-list-item-content>
       </v-list-item>
     </v-card-title>
-
     <v-card-text class="card-content">
       <v-list class="main-card-list">
-        <v-list-item>
-          <span class="subheading">{{ Country }}</span>
-        </v-list-item>
-        <v-list-item>
-          <span class="subheading">{{ candidatesInfo.currentJobProfile }}</span>
-        </v-list-item>
         <v-list-item v-show="candidatesInfo['WorkedPeriod'][0]['TotalExperienceInYear']">
           <span class="subheading">{{ candidatesInfo['WorkedPeriod'][0]['TotalExperienceInYear'] }} Años de experiencia</span>
         </v-list-item>
@@ -47,4 +40,15 @@ export default class CanditateCard extends Vue {
 </script>
 
 <style>
+.card-content{
+  padding: 0;
+}
+.list-title-content{
+  padding: 0;
+}
+.card{
+  min-height: 130px;
+  min-width: 400px;
+  max-width: 500px;
+}
 </style>
