@@ -21,13 +21,20 @@
             ></v-pagination>
           </v-row>
           <v-row>
-            <v-col cols="12">
+            <v-col class="candidates" cols="12">
               <h3 v-show="length === 0 && loadingData === false">
                 Lo sentimos, tu búsqueda no arrojó resultados
               </h3>
               <div v-if="!loadingData">
                 <CandidateCard
-                  v-for="candidate in shownCandidates"
+                  v-for="candidate in shownCandidates[0]"
+                  :key="candidate.key"
+                  :candidatesInfo="candidate"
+                />
+              </div>
+              <div v-if="!loadingData">
+                <CandidateCard
+                  v-for="candidate in shownCandidates[1]"
                   :key="candidate.key"
                   :candidatesInfo="candidate"
                 />
@@ -81,7 +88,7 @@ export default class Dashboard extends Vue {
   candidates = [];
 
   page = 1;
-  perPage = 4;
+  perPage = 6;
   length = 0;
   topSearch = "";
   loadingData = true;
@@ -111,7 +118,11 @@ export default class Dashboard extends Vue {
   get shownCandidates() {
     const { page, perPage, candidates } = this;
     const number = Math.ceil(candidates.length / length);
-    return candidates.slice((page - 1) * perPage, page * perPage);
+    const newCandidates = [
+      candidates.slice((page - 1) * perPage, page * perPage), 
+      candidates.slice((page) * perPage, (page+1)*perPage)
+      ]
+    return newCandidates;
   }
 
   async onSearchEnter(searchPattern: string) {
@@ -128,4 +139,8 @@ export default class Dashboard extends Vue {
 </script>
 
 <style>
+.candidates{
+  display: flex;
+  justify-content: center;
+}
 </style>
