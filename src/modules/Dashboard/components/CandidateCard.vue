@@ -1,7 +1,7 @@
 <template>
-  <v-card class="mx-auto main-card" tile min-height="170px">
+  <v-card class="mx-auto main-card ma-1" tile :min-height="cardHeight">
     <v-row>
-      <v-col cols="6">
+      <v-col cols="12" md="6">
         <v-card-title>
           <v-list-item two-line>
             <v-list-item-content class="list-title-content">
@@ -25,7 +25,7 @@
                 >{{
                   candidatesInfo["WorkedPeriod"][0]["TotalExperienceInYear"]
                 }}
-                Años de experiencia</span
+                Años de exp.</span
               >
             </v-list-item>
             <v-list-item>
@@ -39,9 +39,9 @@
           </v-list>
         </v-card-text>
       </v-col>
-      <v-col cols="6">
+      <v-col cols="12" md="6">
         <v-row justify="end" class="pa-5">
-          <v-btn @click="selectedCandidate"> Ver detalle </v-btn>
+          <v-btn @click="selectedCandidate">Ver</v-btn>
         </v-row>
       </v-col>
     </v-row>
@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 import Vuetify from "vuetify";
 import Vue from "vue";
 
@@ -71,6 +71,17 @@ export default class CanditateCard extends Vue {
 
   selectedCandidate() {
     this.$emit("selectedCandidate", this.candidatesInfo._id, this.candidatesInfo.fileUrl);
+  }
+
+  get cardHeight(){
+    switch (this.$vuetify.breakpoint.name) {
+          case 'xs': return '200px'
+          case 'sm': return '100px'
+          case 'md': return '170px'
+          case 'lg': return '170px'
+          case 'xl': return '170px'
+          default: return '170px'
+    }
   }
 }
 </script>

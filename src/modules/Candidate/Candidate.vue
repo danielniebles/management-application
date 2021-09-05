@@ -1,7 +1,7 @@
 <template>
   <v-container class="col-12 fill-height">
     <v-row>
-      <v-col cols="6">
+      <v-col cols="12" md="6">
         <v-tabs>
           <div class="tabs-header">
             <v-tab v-for="section in candidateInfo" :key="section.sectionName">
@@ -70,7 +70,7 @@
           </v-tab-item>
         </v-tabs>
       </v-col>
-      <v-col cols="6">
+      <v-col cols="12" md="6">
         <vue-pdf-app style="height: 100vh" :pdf="fileUrl"></vue-pdf-app>
       </v-col>
       <v-speed-dial

@@ -8,11 +8,11 @@
     <v-divider></v-divider>
     <v-container fill-heigth fluid>
       <v-row>
-        <v-col cols="3">
+        <v-col cols="12" md="3">
           <FiltersPanel :topSearch="topSearch" />
         </v-col>
         <v-divider vertical></v-divider>
-        <v-col cols="9" class="mt-5">
+        <v-col cols="12" class="mt-5" md="9">
           <v-row justify="end">
             <v-pagination
               v-model="page"
@@ -30,14 +30,13 @@
               <v-col
                 v-for="(candidate, index) in shownCandidates"
                 :key="index"
-                cols="6"
-                class="pa-2"
+                cols="12" md="6"
               >
                 <CandidateCard :candidatesInfo="candidate" @selectedCandidate="showCandidateInfo" />
               </v-col>
             </v-row>
             <v-row v-if="loadingData" class="col-12">
-              <v-col v-for="n in 12" :key="n" cols="6" class="pa-2">
+              <v-col v-for="n in 12" :key="n" cols="12" md="6" class="pa-2">
                 <v-skeleton-loader
                   type="card-heading, list-item-three-line"
                 ></v-skeleton-loader>
