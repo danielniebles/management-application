@@ -1,12 +1,16 @@
 <template>
   <v-app>
     <v-main>
+      <v-btn fab fixed top left small @click="toggleDrawer">
+        <v-icon>mdi-menu</v-icon>
+      </v-btn>
+
       <ServiceProvider>
         <router-view />
       </ServiceProvider>
       <Snackbar></Snackbar>
     </v-main>
-    <v-navigation-drawer permanent app width="200" v-if="this.$router.currentRoute.name !== 'Login'">
+    <v-navigation-drawer temporary app width="200" v-if="this.$router.currentRoute.name !== 'Login'" v-model="drawer">
       <v-list>
         <v-list-item class="px-2">
           <v-img
@@ -65,8 +69,15 @@ import Snackbar from "./modules/shared/components/Snackbar/Snackbar.vue"
   },
 })
 export default class App extends Vue {
+
+  drawer = false;
+
   logout(){
     this.$store.dispatch('logout')
+  }
+
+  toggleDrawer(){
+    this.drawer = true;
   }
 }
 </script>

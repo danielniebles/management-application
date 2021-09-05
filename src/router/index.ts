@@ -22,7 +22,7 @@ const routes: Array<RouteConfig> = [
     component: Login,
   },
   {
-    path: "/candidate",
+    path: "/candidate/:id",
     name: "Candidate",
     component: Candidate,
     props: true
@@ -46,7 +46,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth) && !loggedIn) {
     return next('/login');
   } else if (to.path === '/login' && loggedIn) {
-    return next('/dashboard') 
+    return next('/dashboard')
   }
   next();
 })

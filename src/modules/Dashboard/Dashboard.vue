@@ -21,40 +21,28 @@
             ></v-pagination>
           </v-row>
           <v-row>
-            <v-col class="candidates" cols="12">
+            <v-col cols="12">
               <h3 v-show="length === 0 && loadingData === false">
                 Lo sentimos, tu búsqueda no arrojó resultados
               </h3>
-              <div v-if="!loadingData">
-                <CandidateCard
-                  v-for="candidate in shownCandidates[0]"
-                  :key="candidate.key"
-                  :candidatesInfo="candidate"
-                />
-              </div>
-              <div v-if="!loadingData">
-                <CandidateCard
-                  v-for="candidate in shownCandidates[1]"
-                  :key="candidate.key"
-                  :candidatesInfo="candidate"
-                  @selectedCandidate="queryCandidate"
-                />
-              </div>
-              <v-skeleton-loader
-                type="card-heading, list-item-three-line"
-                v-if="loadingData"
-              ></v-skeleton-loader>
-              <v-divider v-if="loadingData"></v-divider>
-              <v-skeleton-loader
-                type="card-heading, list-item-three-line"
-                v-if="loadingData"
-              ></v-skeleton-loader>
-              <v-divider v-if="loadingData"></v-divider>
-              <v-skeleton-loader
-                type="card-heading, list-item-three-line"
-                v-if="loadingData"
-              ></v-skeleton-loader>
             </v-col>
+            <v-row v-if="!loadingData" class="col-12">
+              <v-col
+                v-for="(candidate, index) in shownCandidates"
+                :key="index"
+                cols="6"
+                class="pa-2"
+              >
+                <CandidateCard :candidatesInfo="candidate" @selectedCandidate="showCandidateInfo" />
+              </v-col>
+            </v-row>
+            <v-row v-if="loadingData" class="col-12">
+              <v-col v-for="n in 12" :key="n" cols="6" class="pa-2">
+                <v-skeleton-loader
+                  type="card-heading, list-item-three-line"
+                ></v-skeleton-loader>
+              </v-col>
+            </v-row>
           </v-row>
         </v-col>
       </v-row>
@@ -62,7 +50,7 @@
   </v-container>
 </template>
 
-<script lang="ts" >
+<script lang="ts">
 import { Component, Inject } from "vue-property-decorator";
 import FiltersPanel from "./components/FiltersPanel.vue";
 import CandidateCard from "./components/CandidateCard.vue";
@@ -83,22 +71,20 @@ Vue.use(Vuetify);
     MainSearchPanel,
   },
   computed: mapGetters(["loggedIn"]),
+
 })
 export default class Dashboard extends Vue {
   @Inject() dashboardService!: DashboardService;
   candidates = [];
 
   page = 1;
-  perPage = 6;
+  perPage = 12;
   length = 0;
   topSearch = "";
   loadingData = true;
 
   async mounted() {
     this.loadingData = true;
-    // this.candidates = await this.dashboardService.getFiltersResult({
-    //   JobProfile: "Ingeniero",
-    // });
     this.length = Math.ceil(this.candidates.length / this.perPage);
     this.loadingData = false;
 
@@ -109,7 +95,6 @@ export default class Dashboard extends Vue {
         this.length = Math.ceil(this.candidates.length / this.perPage);
         this.page = 1;
         this.loadingData = false;
-        
       } else {
         this.loadingData = true;
       }
@@ -119,37 +104,31 @@ export default class Dashboard extends Vue {
   get shownCandidates() {
     const { page, perPage, candidates } = this;
     const number = Math.ceil(candidates.length / length);
-    const newCandidates = [
-      candidates.slice((page - 1) * perPage, page * perPage), 
-      candidates.slice((page) * perPage, (page+1)*perPage)
-      ]
-    return newCandidates;
+    return candidates.slice((page - 1) * perPage, page * perPage);
   }
 
   async onSearchEnter(searchPattern: string) {
     this.loadingData = true;
     this.candidates = await this.dashboardService.getFiltersResult({
       ["DetailResume"]: searchPattern,
-    });    
+    });
     this.topSearch = searchPattern;
     this.page = 1;
     this.length = Math.ceil(this.candidates.length / this.perPage);
     this.loadingData = false;
   }
 
-  queryCandidate(candidateName: any){
-    console.log(candidateName['fileUrl'])
+  showCandidateInfo(id: string, fileUrl: string){
     this.$router.push({
       name: "Candidate",
-      params: { fileUrl: candidateName["fileUrl"]}
-    })
-    
+      params: { id, fileUrl }
+    });
   }
 }
 </script>
 
 <style>
-.candidates{
+.candidates {
   display: flex;
   justify-content: center;
 }
