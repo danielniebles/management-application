@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main>
-      <v-btn fab fixed top left small @click="toggleDrawer">
+      <v-btn v-if="this.$router.currentRoute.name !== 'Login'" fab fixed top left small @click="toggleDrawer">
         <v-icon>mdi-menu</v-icon>
       </v-btn>
 
