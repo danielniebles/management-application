@@ -19,7 +19,7 @@
           <v-card-actions>
             <LoginButton :actionType="LOGIN" @login="login" />
           </v-card-actions>
-          
+
         </v-row>
         <v-row class="justify-center ma-0">
           <p class="ma-0">ó</p>
@@ -54,11 +54,11 @@ export default class Login extends Vue {
   LOGIN = "login";
   REGISTER = "register";
 
-  login(idToken: string) {      
+  login(idToken: string) {
     this.$store
       .dispatch("login", idToken)
       .then(() => this.$router.push({ name: "Dashboard" }))
-      .catch(error => {        
+      .catch(error => {
         Snackbar.popError('Regístrate para poder continuar')
       });
   }
@@ -67,8 +67,6 @@ export default class Login extends Vue {
       .dispatch("register", idToken)
       .then(() => this.$router.push({ name: "Dashboard" }))
       .catch(error => {
-        console.log(error);
-        
         Snackbar.popError('Ya estás registrado, por favor inicia sesión')
       });
   }

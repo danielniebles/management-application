@@ -4,10 +4,17 @@ $main-text-color: #294661;
   .v-input__control {
     .v-input__slot {
       border: #a2a2a2;
-      border-radius: 5px;
+
+      // padding: 0px !important;
+      // border-radius: 30px;
+      // box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
       .v-text-field__slot {
+        // padding: 0px 0px 0px 0px;
+        // background: #e0e0e0;
+        // border-radius: 30px;
         .v-label {
-          color: #8797a7;
+          // color: #8797a7;
+          // padding-left: 12px;
         }
       }
     }
