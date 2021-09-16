@@ -9,20 +9,20 @@
     <v-container fill-heigth fluid>
       <v-row>
         <v-col cols="12" md="3">
-          <FiltersPanel :topSearch="topSearch" />
+          <FiltersPanel :topSearch="topSearch" @searchFromFiltersPanel="searchFromFiltersPanel"></FiltersPanel>
         </v-col>
         <v-divider vertical></v-divider>
         <v-col cols="12" class="mt-5" md="9">
           <v-row justify="end">
             <v-pagination
               v-model="page"
-              :length="length"
+              :length="candidatesPagsLength"
               :total-visible="5"
             ></v-pagination>
           </v-row>
           <v-row>
             <v-col cols="12">
-              <h3 v-show="length === 0 && loadingData === false">
+              <h3 v-show="candidatesPagsLength === 0 && loadingData === false">
                 Lo sentimos, tu búsqueda no arrojó resultados
               </h3>
             </v-col>
@@ -59,7 +59,8 @@ import Vuetify from "vuetify";
 import Vue from "vue";
 import { DashboardService } from "@/modules/Dashboard/DashboardService";
 import { eventBus } from "../../main";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
+import { Candidate } from "../Candidate/models/Candidate";
 
 Vue.use(Vuetify);
 @Component({
@@ -69,12 +70,13 @@ Vue.use(Vuetify);
     CandidateCard,
     MainSearchPanel,
   },
-  computed: mapGetters(["loggedIn"]),
+  computed: mapState(["currentSearch"]),
 
 })
 export default class Dashboard extends Vue {
+  public currentSearch!: []
   @Inject() dashboardService!: DashboardService;
-  candidates = [];
+  candidates: Candidate[] = [];
 
   page = 1;
   perPage = 12;
@@ -84,25 +86,12 @@ export default class Dashboard extends Vue {
 
   async mounted() {
     this.loadingData = true;
-    this.length = Math.ceil(this.candidates.length / this.perPage);
+    if(this.currentSearch.length > 0) this.candidates = this.currentSearch
     this.loadingData = false;
-
-    eventBus.$on("searchFromFilters", (candidates: any) => {
-      if (candidates) {
-        this.candidates.length = 0;
-        this.candidates = candidates;
-        this.length = Math.ceil(this.candidates.length / this.perPage);
-        this.page = 1;
-        this.loadingData = false;
-      } else {
-        this.loadingData = true;
-      }
-    });
   }
 
   get shownCandidates() {
     const { page, perPage, candidates } = this;
-    const number = Math.ceil(candidates.length / length);
     return candidates.slice((page - 1) * perPage, page * perPage);
   }
 
@@ -113,15 +102,31 @@ export default class Dashboard extends Vue {
     });
     this.topSearch = searchPattern;
     this.page = 1;
-    this.length = Math.ceil(this.candidates.length / this.perPage);
+    this.$store.dispatch("updateSearch", this.candidates);
     this.loadingData = false;
   }
+
+  searchFromFiltersPanel(candidates: Candidate[]) {
+      if (candidates) {
+        this.candidates.length = 0;
+        this.candidates = candidates;
+        this.$store.dispatch("updateSearch", this.candidates)
+        this.page = 1;
+        this.loadingData = false;
+      } else {
+        this.loadingData = true;
+      }
+    };
 
   showCandidateInfo(id: string, fileUrl: string){
     this.$router.push({
       name: "Candidate",
       params: { id, fileUrl }
     });
+  }
+
+  get candidatesPagsLength(){
+    return Math.ceil(this.candidates.length / this.perPage);
   }
 }
 </script>

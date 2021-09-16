@@ -7,6 +7,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     user: null,
+    currentSearch: []
   },
   mutations: {
     SET_USER_DATA(state, userData) {
@@ -20,6 +21,9 @@ export default new Vuex.Store({
       localStorage.removeItem("user");
       location.reload();
     },
+    SET_CURRENT_SEARCH(state, candidates){
+      state.currentSearch = candidates;
+    }
   },
   actions: {
     login({ commit }, googleToken) {
@@ -43,6 +47,9 @@ export default new Vuex.Store({
     logout({ commit }, payload) {
       commit("CLEAR_USER_DATA");
     },
+    updateSearch({ commit }, candidates){
+      commit("SET_CURRENT_SEARCH", candidates)
+    }
   },
   getters: {
     loggedIn(state) {

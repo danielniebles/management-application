@@ -14,6 +14,7 @@ export class DashboardService {
             data: searchObject
         }
         const response = await axios.request(config)
+
         return response.data
     }
 

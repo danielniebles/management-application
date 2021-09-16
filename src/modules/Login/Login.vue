@@ -2,12 +2,12 @@
   <v-container class="col-12 container">
     <v-card class="mx-auto my-12" max-width="374">
       <v-img
-        src="https://uploads-ssl.webflow.com/5ea8c50bafc9df682df20c64/5fd1e22ce86c3bb12b333a2f_addon-logo.png"
+        src="../../assets/logo_atome.png"
       ></v-img>
-      <v-img
+      <!-- <v-img
         src="https://uploads-ssl.webflow.com/5ea8c50bafc9df682df20c64/605b51072dc3d843cbf78424_Para-consultora-.png"
-      ></v-img>
-      <v-row class="justify-center mt-5">
+      ></v-img> -->
+      <v-row class="justify-center mt-1">
         <span class="login-card-title">Ingresa a tu cuenta</span>
       </v-row>
       <v-row class="justify-center mt-5">
