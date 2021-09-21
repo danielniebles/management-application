@@ -9,7 +9,10 @@
     <v-container fill-heigth fluid>
       <v-row>
         <v-col cols="12" md="3">
-          <FiltersPanel :topSearch="topSearch" @searchFromFiltersPanel="searchFromFiltersPanel"></FiltersPanel>
+          <FiltersPanel
+            :topSearch="topSearch"
+            @searchFromFiltersPanel="searchFromFiltersPanel"
+          ></FiltersPanel>
         </v-col>
         <v-divider vertical></v-divider>
         <v-col cols="12" class="mt-5" md="9">
@@ -30,9 +33,13 @@
               <v-col
                 v-for="(candidate, index) in shownCandidates"
                 :key="index"
-                cols="12" md="6"
+                cols="12"
+                md="6"
               >
-                <CandidateCard :candidatesInfo="candidate" @selectedCandidate="showCandidateInfo" />
+                <CandidateCard
+                  :candidatesInfo="candidate"
+                  @selectedCandidate="showCandidateInfo"
+                />
               </v-col>
             </v-row>
             <v-row v-if="loadingData" class="col-12">
@@ -45,7 +52,21 @@
           </v-row>
         </v-col>
       </v-row>
+      <v-btn fab fixed bottom right @click="openUploadFileDialog">
+        <v-icon>mdi-file-upload-outline</v-icon>
+      </v-btn>
     </v-container>
+    <v-dialog v-model="dialog" max-width="600">
+      <v-card class="pa-5">
+        <v-card-title>Cargar hojas de vida</v-card-title>
+        <v-file-input label="Archivo" ref="file" v-model="file"></v-file-input>
+        <v-card-actions>
+          <v-row justify="end">
+          <v-btn @click="submitFile">Aceptar</v-btn>
+          </v-row>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -71,10 +92,9 @@ Vue.use(Vuetify);
     MainSearchPanel,
   },
   computed: mapState(["currentSearch"]),
-
 })
 export default class Dashboard extends Vue {
-  public currentSearch!: []
+  public currentSearch!: [];
   @Inject() dashboardService!: DashboardService;
   candidates: Candidate[] = [];
 
@@ -83,10 +103,12 @@ export default class Dashboard extends Vue {
   length = 0;
   topSearch = "";
   loadingData = true;
+  dialog = false;
+  file: File = {} as unknown as File
 
   async mounted() {
     this.loadingData = true;
-    if(this.currentSearch.length > 0) this.candidates = this.currentSearch
+    if (this.currentSearch.length > 0) this.candidates = this.currentSearch;
     this.loadingData = false;
   }
 
@@ -107,25 +129,44 @@ export default class Dashboard extends Vue {
   }
 
   searchFromFiltersPanel(candidates: Candidate[]) {
-      if (candidates) {
-        this.candidates.length = 0;
-        this.candidates = candidates;
-        this.$store.dispatch("updateSearch", this.candidates)
-        this.page = 1;
-        this.loadingData = false;
-      } else {
-        this.loadingData = true;
-      }
-    };
+    if (candidates) {
+      this.candidates.length = 0;
+      this.candidates = candidates;
+      this.$store.dispatch("updateSearch", this.candidates);
+      this.page = 1;
+      this.loadingData = false;
+    } else {
+      this.loadingData = true;
+    }
+  }
 
-  showCandidateInfo(id: string, fileUrl: string){
+  showCandidateInfo(id: string, fileUrl: string) {
     this.$router.push({
       name: "Candidate",
-      params: { id, fileUrl }
+      params: { id, fileUrl },
     });
   }
 
-  get candidatesPagsLength(){
+  openUploadFileDialog() {
+    this.dialog = true;
+  }
+
+  async submitFile(){
+    let formData = new FormData();
+    formData.append("zip", this.file);
+    try {
+      const response = await this.dashboardService.uploadCandidatesCVs(formData);
+       if (response.status === 200) {
+        Snackbar.popSuccess("Carga exitosa");
+      } else {
+        Snackbar.popWarning("Ha ocurrido un error al cargar");
+      }
+    } catch (error) {
+      Snackbar.popError("Ha ocurrido un error")
+    }
+  }
+
+  get candidatesPagsLength() {
     return Math.ceil(this.candidates.length / this.perPage);
   }
 }
