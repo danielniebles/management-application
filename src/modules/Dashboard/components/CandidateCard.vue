@@ -11,6 +11,9 @@
               <v-list-item-subtitle class="text-wrap">{{
                 candidatesInfo.currentJobProfile
               }}</v-list-item-subtitle>
+              <v-list-item-subtitle class="text-wrap">{{
+                candidatesInfo.email
+              }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-card-title>
