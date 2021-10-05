@@ -16,7 +16,15 @@
         </v-col>
         <v-divider vertical></v-divider>
         <v-col cols="12" class="mt-5" md="9">
-          <v-row justify="end">
+          <v-row
+            :justify="displayCheckbox ? 'space-between' : 'end'"
+            class="pagination"
+          >
+            <v-checkbox
+              v-if="displayCheckbox"
+              label="Seleccionar todos"
+              :indeterminate="someCandidateSelected"
+            ></v-checkbox>
             <v-pagination
               v-model="page"
               :length="candidatesPagsLength"
@@ -24,10 +32,11 @@
             ></v-pagination>
           </v-row>
           <v-row>
-            <v-col cols="12">
-              <h3 v-show="candidatesPagsLength === 0 && loadingData === false">
-                Lo sentimos, tu búsqueda no arrojó resultados
-              </h3>
+            <v-col
+              cols="12"
+              v-if="candidatesPagsLength === 0 && loadingData === false"
+            >
+              <h3>Lo sentimos, tu búsqueda no arrojó resultados</h3>
             </v-col>
             <v-row v-if="!loadingData" class="col-12">
               <v-col
@@ -38,7 +47,9 @@
               >
                 <CandidateCard
                   :candidatesInfo="candidate"
-                  @selectedCandidate="showCandidateInfo"
+                  :displayCheckbox="displayCheckbox"
+                  @showCandidate="showCandidateInfo"
+                  @selectCandidate="selectCandidate(index)"
                 />
               </v-col>
             </v-row>
@@ -52,9 +63,28 @@
           </v-row>
         </v-col>
       </v-row>
-      <v-btn fab fixed bottom right @click="openUploadFileDialog">
-        <v-icon>mdi-file-upload-outline</v-icon>
-      </v-btn>
+      <v-speed-dial
+        v-model="fab"
+        fab
+        bottom
+        fixed
+        right
+        direction="left"
+        transition="slide-x-reverse-transition"
+      >
+        <template v-slot:activator>
+          <v-btn v-model="fab" fab class="ml-4" small>
+            <v-icon v-if="!fab">mdi-account-circle</v-icon>
+            <v-icon v-else>mdi-close</v-icon>
+          </v-btn>
+        </template>
+        <v-btn small fab @click="openUploadFileDialog">
+          <v-icon>mdi-file-upload-outline</v-icon>
+        </v-btn>
+        <v-btn small fab @click="enableExportToFile">
+          <v-icon>mdi-file-download</v-icon>
+        </v-btn>
+      </v-speed-dial>
     </v-container>
     <v-dialog v-model="dialog" max-width="600">
       <v-card class="pa-5">
@@ -62,7 +92,7 @@
         <v-file-input label="Archivo" ref="file" v-model="file"></v-file-input>
         <v-card-actions>
           <v-row justify="end">
-          <v-btn @click="submitFile">Aceptar</v-btn>
+            <v-btn @click="submitFile">Aceptar</v-btn>
           </v-row>
         </v-card-actions>
       </v-card>
@@ -104,7 +134,9 @@ export default class Dashboard extends Vue {
   topSearch = "";
   loadingData = true;
   dialog = false;
-  file: File = {} as unknown as File
+  file: File = {} as unknown as File;
+  displayCheckbox = false;
+  fab = false;
 
   async mounted() {
     this.loadingData = true;
@@ -132,6 +164,7 @@ export default class Dashboard extends Vue {
     if (candidates) {
       this.candidates.length = 0;
       this.candidates = candidates;
+      this.candidates.forEach((candidate) => (candidate.selected = false));
       this.$store.dispatch("updateSearch", this.candidates);
       this.page = 1;
       this.loadingData = false;
@@ -147,27 +180,43 @@ export default class Dashboard extends Vue {
     });
   }
 
+  selectCandidate(index: number) {
+    this.candidates[index].selected = !this.candidates[index].selected;
+    console.log(this.candidates.some((candidate) => candidate.selected))
+    //console.log(this.candidates[index]);
+  }
+
+  get someCandidateSelected(){
+    return this.candidates.some((candidate) => candidate.selected)
+  }
+
   openUploadFileDialog() {
     this.dialog = true;
   }
 
-  async submitFile(){
+  async submitFile() {
     let formData = new FormData();
     formData.append("zip", this.file);
     try {
-      const response = await this.dashboardService.uploadCandidatesCVs(formData);
-       if (response.status === 200) {
+      const response = await this.dashboardService.uploadCandidatesCVs(
+        formData
+      );
+      if (response.status === 200) {
         Snackbar.popSuccess("Carga exitosa");
       } else {
         Snackbar.popWarning("Ha ocurrido un error al cargar");
       }
     } catch (error) {
-      Snackbar.popError("Ha ocurrido un error")
+      Snackbar.popError("Ha ocurrido un error");
     }
   }
 
   get candidatesPagsLength() {
     return Math.ceil(this.candidates.length / this.perPage);
+  }
+
+  enableExportToFile() {
+    this.displayCheckbox = !this.displayCheckbox;
   }
 }
 </script>
@@ -176,5 +225,9 @@ export default class Dashboard extends Vue {
 .candidates {
   display: flex;
   justify-content: center;
+}
+.pagination {
+  height: 4rem;
+  padding-left: 1.5rem;
 }
 </style>

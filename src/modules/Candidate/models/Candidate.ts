@@ -24,6 +24,7 @@ export interface Candidate {
   }
   currentJobProfile: string
   fileUrl: string
+  selected: boolean
   _id: string
 
 }

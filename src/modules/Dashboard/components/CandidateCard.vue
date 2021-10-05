@@ -1,54 +1,61 @@
 <template>
-  <v-card class="mx-auto main-card ma-1" tile :min-height="cardHeight">
-    <v-row>
-      <v-col cols="12" md="6">
-        <v-card-title>
-          <v-list-item two-line>
-            <v-list-item-content class="list-title-content">
-              <v-list-item-title>{{
-                candidatesInfo["Name"][0]["FormattedName"]
-              }}</v-list-item-title>
-              <v-list-item-subtitle class="text-wrap">{{
-                candidatesInfo.currentJobProfile
-              }}</v-list-item-subtitle>
-              <v-list-item-subtitle class="text-wrap">{{
-                candidatesInfo.email
-              }}</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </v-card-title>
-        <v-card-text class="card-content">
-          <v-list class="main-card-list">
-            <v-list-item
-              v-show="
-                candidatesInfo['WorkedPeriod'][0]['TotalExperienceInYear']
-              "
-            >
-              <span class="subheading"
-                >{{
-                  candidatesInfo["WorkedPeriod"][0]["TotalExperienceInYear"]
-                }}
-                Años de exp.</span
-              >
-            </v-list-item>
-            <v-list-item>
-              <a
-                :href="candidatesInfo['fileUrl']"
-                class="subheading"
-                target="_blank"
-                >Hoja de vida</a
-              >
-            </v-list-item>
-          </v-list>
-        </v-card-text>
-      </v-col>
-      <v-col cols="12" md="6">
-        <v-row justify="end" class="pa-5">
-          <v-btn @click="selectedCandidate">Ver</v-btn>
+  <v-container>
+    <v-card class="mx-auto main-card ma-1" tile :min-height="cardHeight">
+      <v-container>
+        <v-row>
+          <v-col cols="1" md="1" align-self="start" v-if="displayCheckbox">
+            <v-checkbox @click="selectCandidate"></v-checkbox>
+          </v-col>
+          <v-col cols="11" md="8" >
+            <v-card-title class="pa-0">
+              <v-list-item two-line>
+                <v-list-item-content class="list-title-content">
+                  <v-list-item-title>{{
+                    candidatesInfo["Name"][0]["FormattedName"]
+                  }}</v-list-item-title>
+                  <v-list-item-subtitle class="text-wrap">{{
+                    candidatesInfo.currentJobProfile
+                  }}</v-list-item-subtitle>
+                  <v-list-item-subtitle class="text-wrap">{{
+                    candidatesInfo.email
+                  }}</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-card-title>
+            <v-card-text class="pa-0">
+              <v-list class="main-card-list">
+                <v-list-item
+                  v-show="
+                    candidatesInfo['WorkedPeriod'][0]['TotalExperienceInYear']
+                  "
+                >
+                  <span class="subheading"
+                    >{{
+                      candidatesInfo["WorkedPeriod"][0]["TotalExperienceInYear"]
+                    }}
+                    Años de exp.</span
+                  >
+                </v-list-item>
+                <v-list-item>
+                  <a
+                    :href="candidatesInfo['fileUrl']"
+                    class="subheading"
+                    target="_blank"
+                    >Hoja de vida</a
+                  >
+                </v-list-item>
+              </v-list>
+            </v-card-text>
+          </v-col>
+          <v-col cols="12" md="3">
+            <v-row justify="end" class="pa-5">
+              <v-btn @click="showCandidate">Ver</v-btn>
+            </v-row>
+          </v-col>
         </v-row>
-      </v-col>
-    </v-row>
-  </v-card>
+      </v-container>
+    </v-card>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -65,15 +72,21 @@ Vue.use(Vuetify);
     },
   },
 })
+
 export default class CanditateCard extends Vue {
   @Prop() private candidatesInfo!: any;
+  @Prop() private displayCheckbox!: boolean;
 
   get Country() {
     return this.candidatesInfo["ResumeCountry"][0]["Country"] || "Colombia";
   }
 
-  selectedCandidate() {
-    this.$emit("selectedCandidate", this.candidatesInfo._id, this.candidatesInfo.fileUrl);
+  showCandidate() {
+    this.$emit("showCandidate", this.candidatesInfo._id, this.candidatesInfo.fileUrl);
+  }
+
+  selectCandidate(){
+    this.$emit("selectCandidate")
   }
 
   get cardHeight(){
@@ -90,9 +103,6 @@ export default class CanditateCard extends Vue {
 </script>
 
 <style>
-.card-content {
-  padding: 0px 0px 0px 16px;
-}
 
 .card-actions {
   position: absolute;
