@@ -67,20 +67,72 @@ export default class FiltersPanel extends Vue {
     const dummy: any[] = [];
     this.searchEmits.forEach((item) => dummy.push(item.key));
     this.filterKeys = [...new Set(dummy)];
-    this.formattedSearch.length = 0;
-    this.mergedSearch.length = 0;
+    const searchItemsArray: any[] = [];
 
-    const finalSearch: any[] = [];
-    this.filterKeys.forEach((filter) => {
-      const temp = this.searchEmits.filter((item) => item.key === filter);
-      if (temp[temp.length - 1].value !== "")
-        finalSearch.push(temp[temp.length - 1]);
+    const validFiltersArray: any[] = this.getValidFiltersArrayFromKeys(
+      this.filterKeys,
+      this.searchEmits
+    );
+    const filtersObjectArray = this.buildFiltersObjectArray(validFiltersArray);
+
+    const parentKeys = filtersObjectArray.map((item: any) => Object.keys(item));
+    const parentKeysArray = [
+      ...new Set(parentKeys.map((element: any) => element[0])),
+    ];
+
+    parentKeysArray.forEach((key: string) => {
+      const matchingSearchItems = filtersObjectArray.filter((item: any) => {
+        if (key in item) return item;
+      });
+
+      const searchItemKeys: any = [];
+      matchingSearchItems.forEach((item: any) => {
+        searchItemKeys.push(item[key]);
+      });
+
+      const formattedSearchItem = {
+        [key]: searchItemKeys,
+      };
+
+      searchItemsArray.push(formattedSearchItem);
     });
 
-    finalSearch.forEach((item) => {
-      const splitKey: string[] = item.key.split("_");
+    if (this.topSearch !== "")
+      searchItemsArray.push({ ["DetailResume"]: this.topSearch });
+    if (this.jobProfile !== "")
+      searchItemsArray.push({ ["JobProfile"]: this.jobProfile });
 
-      const test: any =
+    const searchObject = this.createObjectFromArray(searchItemsArray);
+
+    if (Object.keys(searchObject).length !== 0) {
+      this.$emit("searchFromFiltersPanel");
+      const response = await this.dashboardService.getFiltersResult(
+        searchObject
+      );
+      this.$emit("searchFromFiltersPanel", response);
+    }
+  }
+
+  cleanFields() {
+    this.jobProfile = "";
+    this.cleanFlag = !this.cleanFlag;
+  }
+
+  getValidFiltersArrayFromKeys(keys: string[], filters: any[]) {
+    const validKeys: any[] = [];
+    keys.forEach((key) => {
+      const matchingFilters = filters.filter((item) => item.key === key);
+      if (matchingFilters[matchingFilters.length - 1].value !== "")
+        validKeys.push(matchingFilters[matchingFilters.length - 1]);
+    });
+    return validKeys;
+  }
+
+  buildFiltersObjectArray(filtersArray: any) {
+    const filtersObjectArray: any[] = [];
+    filtersArray.forEach((item: any) => {
+      const splitKey: string[] = item.key.split("_");
+      const filterObject: any =
         splitKey.length > 1
           ? {
               [item.parentKey]: {
@@ -95,66 +147,9 @@ export default class FiltersPanel extends Vue {
               },
             };
 
-      this.formattedSearch.push(test);
+      filtersObjectArray.push(filterObject);
     });
-
-    const parentKeys = this.formattedSearch.map((item: any) =>
-      Object.keys(item)
-    );
-    const parentKeysArray = [
-      ...new Set(parentKeys.map((element: string) => element[0])),
-    ];
-
-    parentKeysArray.forEach((key: any) => {
-      const matchingSearchProperty = this.formattedSearch.filter(
-        (item: any) => {
-          if (key in item) return item;
-        }
-      );
-
-      const searchKeys: any = [];
-      matchingSearchProperty.forEach((item: any) => {
-        searchKeys.push(item[key]);
-      });
-
-      let keysObject: any = [];
-      searchKeys.forEach((item: any) => {
-        const key = Object.keys(item);
-        if (item[key[0]] !== "") keysObject.push(item);
-      });
-
-      const mergedObject = {
-        [key]: keysObject,
-      };
-
-      this.mergedSearch.push(mergedObject);
-      if (this.topSearch !== "")
-        this.mergedSearch.push({ ["DetailResume"]: this.topSearch });
-    });
-
-    if (this.jobProfile !== "")
-      this.mergedSearch.push({ ["JobProfile"]: this.jobProfile });
-
-    const dataObject = this.createObjectFromArray(this.mergedSearch);
-
-    console.log(dataObject);
-
-    // this.mergedSearch.forEach( (key: any) => {
-    //   Object.assign(dataObject, key)
-    // })
-
-    if (Object.keys(dataObject).length !== 0) {
-      eventBus.$emit("searchFromFilters");
-      const response = await this.dashboardService.getFiltersResult(dataObject);
-      console.log(dataObject);
-
-      eventBus.$emit("searchFromFilters", response);
-    }
-  }
-
-  cleanFields() {
-    this.jobProfile = "";
-    this.cleanFlag = !this.cleanFlag;
+    return filtersObjectArray;
   }
 
   createObjectFromArray(inputArray: any[]) {
@@ -168,6 +163,5 @@ export default class FiltersPanel extends Vue {
 </script>
 
 <style lang="scss" scoped>
-
 </style>
 

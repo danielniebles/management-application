@@ -1,20 +1,20 @@
 <template>
   <v-app>
     <v-main>
-      <v-btn v-if="this.$router.currentRoute.name !== 'Login'" fab fixed top left small @click="toggleDrawer">
+      <!-- <v-btn v-if="this.$router.currentRoute.name !== 'Login'" fab fixed top left small @click="toggleDrawer">
         <v-icon>mdi-menu</v-icon>
-      </v-btn>
+      </v-btn> -->
 
       <ServiceProvider>
         <router-view />
       </ServiceProvider>
       <Snackbar></Snackbar>
     </v-main>
-    <v-navigation-drawer temporary app width="200" v-if="this.$router.currentRoute.name !== 'Login'" v-model="drawer">
+    <v-navigation-drawer permanent expand-on-hover app width="200" v-if="this.$router.currentRoute.name !== 'Login'" v-model="drawer">
       <v-list>
         <v-list-item class="px-2">
           <v-img
-            src="https://uploads-ssl.webflow.com/5ea8c50bafc9df682df20c64/5fd1e22ce86c3bb12b333a2f_addon-logo.png"
+            src="./assets/logo_atome.png"
           ></v-img>
         </v-list-item>
       </v-list>

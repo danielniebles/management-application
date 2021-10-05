@@ -14,7 +14,7 @@
             :key="levelOneIndex"
             class="scroll"
           >
-            <v-expansion-panels multiple tile>
+            <v-expansion-panels multiple tile v-model="panel">
               <v-expansion-panel
                 v-for="(variable, levelTwoIndex) in section.variables"
                 :key="levelTwoIndex"
@@ -33,35 +33,40 @@
                       <legend>
                         {{ variable.displayName }} {{ levelThreeIndex }}
                       </legend>
-                      <div
-                        v-for="(item, levelFourIndex) in value[
-                          Object.keys(value)[0]
-                        ]"
-                        :key="item.rchilliKey"
-                      >
-                        <v-text-field
-                          v-if="item.type === 'string' || item.type === 'date'"
-                          :label="item.displayName"
-                          outlined
-                          v-model="
+                      <v-row>
+                        <v-col
+                          :cols="
                             candidateInfo[levelOneIndex].variables[
                               levelTwoIndex
                             ].variables[levelThreeIndex][Object.keys(value)[0]][
                               levelFourIndex
-                            ].value
+                            ].value.length > 10
+                              ? 12
+                              : 6
                           "
-                          class="main-text-field mr-2 ml-2"
+                          v-for="(item, levelFourIndex) in value[
+                            Object.keys(value)[0]
+                          ]"
+                          :key="item.rchilliKey"
                         >
-                        </v-text-field>
-                        <!-- <v-select
-                          v-if="value.type === 'list'"
-                          :label="value.name"
-                          :items="value.list"
-                          outlined
-                          class="main-text-field"
-                        >
-                        </v-select> -->
-                      </div>
+                          <v-text-field
+                            v-if="
+                              item.type === 'string' || item.type === 'date'
+                            "
+                            :label="item.displayName"
+                            outlined
+                            v-model="
+                              candidateInfo[levelOneIndex].variables[
+                                levelTwoIndex
+                              ].variables[levelThreeIndex][
+                                Object.keys(value)[0]
+                              ][levelFourIndex].value
+                            "
+                            class="main-text-field mr-2 ml-2"
+                          >
+                          </v-text-field>
+                        </v-col>
+                      </v-row>
                     </fieldset>
                   </div>
                 </v-expansion-panel-content>
@@ -123,6 +128,7 @@ export default class Candidate extends Vue {
   length = 0;
   candidateInfo: any[] = [];
   fab = false;
+  panel = [0, 1, 2, 3];
 
   async updateCandidate() {
     try {
@@ -155,15 +161,14 @@ export default class Candidate extends Vue {
     }
   }
 
-  back(){
-    this.$router.push({ name: "Dashboard"})
+  back() {
+    this.$router.push({ name: "Dashboard" });
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .tabs-header {
-  margin-left: 45px;
   display: flex;
 }
 
