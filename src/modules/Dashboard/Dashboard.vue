@@ -92,12 +92,22 @@
             <v-icon v-else>mdi-close</v-icon>
           </v-btn>
         </template>
-        <v-btn small fab @click="openUploadFileDialog">
-          <v-icon>mdi-file-upload-outline</v-icon>
-        </v-btn>
-        <v-btn small fab @click="enableExportToFile">
-          <v-icon>mdi-file-download</v-icon>
-        </v-btn>
+        <v-tooltip top>
+          <template v-slot:activator="{ on }">
+            <v-btn small fab @click="openUploadFileDialog" v-on="on">
+              <v-icon>mdi-file-upload-outline</v-icon>
+            </v-btn>
+          </template>
+          <span>Cargar CV</span>
+        </v-tooltip>
+        <v-tooltip top>
+          <template v-slot:activator="{ on }">
+            <v-btn small fab @click="enableExportToFile" v-on="on">
+              <v-icon>mdi-file-download</v-icon>
+            </v-btn>
+          </template>
+          <span>Exportar</span>
+        </v-tooltip>
       </v-speed-dial>
     </v-container>
     <v-dialog v-model="dialog" max-width="600">
@@ -126,6 +136,7 @@ import { DashboardService } from "@/modules/Dashboard/DashboardService";
 import { mapState } from "vuex";
 import { Candidate } from "../Candidate/models/Candidate";
 import moment from "moment";
+import { STYLE_CLASSES } from "@/shared/StyleConstants"
 
 Vue.use(Vuetify);
 @Component({
@@ -140,8 +151,12 @@ Vue.use(Vuetify);
 export default class Dashboard extends Vue {
   public currentSearch!: [];
   @Inject() dashboardService!: DashboardService;
-  candidates: Candidate[] = [];
 
+  primaryBtnClass = STYLE_CLASSES.PRIMARY_BTN
+
+
+
+  candidates: Candidate[] = [];
   page = 1;
   perPage = 12;
   length = 0;
@@ -196,8 +211,6 @@ export default class Dashboard extends Vue {
   }
 
   selectCandidate(index: number) {
-    console.log(index);
-
     this.candidates[index].selected = !this.candidates[index].selected;
   }
 
@@ -295,8 +308,8 @@ export default class Dashboard extends Vue {
     }
   }
 
-  get selectedCandidatesCount(){
-    return this.candidates.filter((candidate) => candidate.selected).length
+  get selectedCandidatesCount() {
+    return this.candidates.filter((candidate) => candidate.selected).length;
   }
 
   @Watch("allSelected")

@@ -77,14 +77,6 @@ export default class CanditateCard extends Vue {
   @Prop() private candidatesInfo!: Candidate;
   @Prop() private displayCheckbox!: boolean;
 
-  // mounted(){
-  //   console.log("mounted", this.candidatesInfo, this.formattedCandidateInfo)
-  // }
-
-  // created(){
-  //   console.log("created", this.candidatesInfo, this.formattedCandidateInfo)
-  // }
-
   get Country() {
     return this.candidatesInfo["ResumeCountry"][0]["Country"] || "Colombia";
   }
@@ -131,7 +123,6 @@ export default class CanditateCard extends Vue {
   }
 
   selectedCandidate() {
-    console.log(this.candidateInfo.selected);
     this.$emit("selectCandidate");
   }
 }
