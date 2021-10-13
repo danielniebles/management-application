@@ -4,20 +4,20 @@
       <v-container>
         <v-row>
           <v-col cols="1" md="1" align-self="start" v-if="displayCheckbox">
-            <v-checkbox @click="selectCandidate"></v-checkbox>
+            <v-checkbox @click="selectedCandidate" v-model="candidateInfo.selected"></v-checkbox>
           </v-col>
-          <v-col cols="11" md="8" >
+          <v-col cols="11" :md="displayCheckbox ? '8' : '9'">
             <v-card-title class="pa-0">
               <v-list-item two-line>
                 <v-list-item-content class="list-title-content">
                   <v-list-item-title>{{
-                    candidatesInfo["Name"][0]["FormattedName"]
+                    candidateInfo.name
                   }}</v-list-item-title>
                   <v-list-item-subtitle class="text-wrap">{{
-                    candidatesInfo.currentJobProfile
+                    candidateInfo.jobProfile
                   }}</v-list-item-subtitle>
                   <v-list-item-subtitle class="text-wrap">{{
-                    candidatesInfo.email
+                    candidateInfo.email
                   }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
@@ -26,19 +26,19 @@
               <v-list class="main-card-list">
                 <v-list-item
                   v-show="
-                    candidatesInfo['WorkedPeriod'][0]['TotalExperienceInYear']
+                    candidateInfo.experience
                   "
                 >
                   <span class="subheading"
                     >{{
-                      candidatesInfo["WorkedPeriod"][0]["TotalExperienceInYear"]
+                      candidateInfo.experience
                     }}
                     Años de exp.</span
                   >
                 </v-list-item>
                 <v-list-item>
                   <a
-                    :href="candidatesInfo['fileUrl']"
+                    :href="candidateInfo.fileUrl"
                     class="subheading"
                     target="_blank"
                     >Hoja de vida</a
@@ -62,6 +62,7 @@
 import { Component, Prop, Watch } from "vue-property-decorator";
 import Vuetify from "vuetify";
 import Vue from "vue";
+import { Candidate } from "@/modules/Candidate/models/Candidate";
 
 Vue.use(Vuetify);
 @Component({
@@ -72,38 +73,71 @@ Vue.use(Vuetify);
     },
   },
 })
-
 export default class CanditateCard extends Vue {
-  @Prop() private candidatesInfo!: any;
+  @Prop() private candidatesInfo!: Candidate;
   @Prop() private displayCheckbox!: boolean;
+
+  // mounted(){
+  //   console.log("mounted", this.candidatesInfo, this.formattedCandidateInfo)
+  // }
+
+  // created(){
+  //   console.log("created", this.candidatesInfo, this.formattedCandidateInfo)
+  // }
 
   get Country() {
     return this.candidatesInfo["ResumeCountry"][0]["Country"] || "Colombia";
   }
 
+  get candidateInfo() {
+    const [name] = this.candidatesInfo.Name;
+    const [country] = this.candidatesInfo.ResumeCountry;
+    const [experience] = this.candidatesInfo.WorkedPeriod;
+    return {
+      name: name.FormattedName ?? "",
+      country: country.Country ?? "Colombia",
+      experience: experience.TotalExperienceInYear ?? "",
+      email: this.candidatesInfo.email,
+      jobProfile: this.candidatesInfo.currentJobProfile,
+      id: this.candidatesInfo._id,
+      fileUrl: this.candidatesInfo.fileUrl,
+      selected: this.candidatesInfo.selected
+    };
+  }
+
   showCandidate() {
-    this.$emit("showCandidate", this.candidatesInfo._id, this.candidatesInfo.fileUrl);
+    this.$emit(
+      "showCandidate",
+      this.candidateInfo.id,
+      this.candidateInfo.fileUrl
+    );
   }
 
-  selectCandidate(){
-    this.$emit("selectCandidate")
-  }
-
-  get cardHeight(){
+  get cardHeight() {
     switch (this.$vuetify.breakpoint.name) {
-          case 'xs': return '200px'
-          case 'sm': return '100px'
-          case 'md': return '170px'
-          case 'lg': return '170px'
-          case 'xl': return '170px'
-          default: return '170px'
+      case "xs":
+        return "200px";
+      case "sm":
+        return "100px";
+      case "md":
+        return "170px";
+      case "lg":
+        return "170px";
+      case "xl":
+        return "170px";
+      default:
+        return "170px";
     }
+  }
+
+  selectedCandidate() {
+    console.log(this.candidateInfo.selected);
+    this.$emit("selectCandidate");
   }
 }
 </script>
 
 <style>
-
 .card-actions {
   position: absolute;
   bottom: 0;

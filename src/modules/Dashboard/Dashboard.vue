@@ -20,16 +20,26 @@
             :justify="displayCheckbox ? 'space-between' : 'end'"
             class="pagination"
           >
-            <v-checkbox
-              v-if="displayCheckbox"
-              label="Seleccionar todos"
-              :indeterminate="someCandidateSelected"
-            ></v-checkbox>
-            <v-pagination
-              v-model="page"
-              :length="candidatesPagsLength"
-              :total-visible="5"
-            ></v-pagination>
+            <v-col v-if="displayCheckbox">
+              <v-row>
+                <v-col cols="auto">
+                  <v-checkbox
+                    :label="`Seleccionar todos (${selectedCandidatesCount} seleccionados)`"
+                    v-model="allSelected"
+                  ></v-checkbox>
+                </v-col>
+                <v-col align-self="center">
+                  <v-btn @click="exportCandidatesFile">Exportar</v-btn>
+                </v-col>
+              </v-row>
+            </v-col>
+            <v-col cols="auto" align-self="center">
+              <v-pagination
+                v-model="page"
+                :length="candidatesPagsLength"
+                :total-visible="5"
+              ></v-pagination>
+            </v-col>
           </v-row>
           <v-row>
             <v-col
@@ -40,8 +50,8 @@
             </v-col>
             <v-row v-if="!loadingData" class="col-12">
               <v-col
-                v-for="(candidate, index) in shownCandidates"
-                :key="index"
+                v-for="candidate in shownCandidates"
+                :key="candidate._id"
                 cols="12"
                 md="6"
               >
@@ -49,7 +59,11 @@
                   :candidatesInfo="candidate"
                   :displayCheckbox="displayCheckbox"
                   @showCandidate="showCandidateInfo"
-                  @selectCandidate="selectCandidate(index)"
+                  @selectCandidate="
+                    selectCandidate(
+                      candidates.findIndex((c) => c._id === candidate._id)
+                    )
+                  "
                 />
               </v-col>
             </v-row>
@@ -101,7 +115,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Inject } from "vue-property-decorator";
+import { Component, Inject, Watch } from "vue-property-decorator";
 import FiltersPanel from "./components/FiltersPanel.vue";
 import CandidateCard from "./components/CandidateCard.vue";
 import MainSearchPanel from "./components/MainSearchPanel.vue";
@@ -109,9 +123,9 @@ import Snackbar from "../shared/components/Snackbar/Snackbar.vue";
 import Vuetify from "vuetify";
 import Vue from "vue";
 import { DashboardService } from "@/modules/Dashboard/DashboardService";
-import { eventBus } from "../../main";
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "vuex";
 import { Candidate } from "../Candidate/models/Candidate";
+import moment from "moment";
 
 Vue.use(Vuetify);
 @Component({
@@ -137,6 +151,7 @@ export default class Dashboard extends Vue {
   file: File = {} as unknown as File;
   displayCheckbox = false;
   fab = false;
+  allSelected = false;
 
   async mounted() {
     this.loadingData = true;
@@ -163,8 +178,8 @@ export default class Dashboard extends Vue {
   searchFromFiltersPanel(candidates: Candidate[]) {
     if (candidates) {
       this.candidates.length = 0;
+      candidates.forEach((candidate) => Vue.set(candidate, "selected", false));
       this.candidates = candidates;
-      this.candidates.forEach((candidate) => (candidate.selected = false));
       this.$store.dispatch("updateSearch", this.candidates);
       this.page = 1;
       this.loadingData = false;
@@ -181,13 +196,9 @@ export default class Dashboard extends Vue {
   }
 
   selectCandidate(index: number) {
-    this.candidates[index].selected = !this.candidates[index].selected;
-    console.log(this.candidates.some((candidate) => candidate.selected))
-    //console.log(this.candidates[index]);
-  }
+    console.log(index);
 
-  get someCandidateSelected(){
-    return this.candidates.some((candidate) => candidate.selected)
+    this.candidates[index].selected = !this.candidates[index].selected;
   }
 
   openUploadFileDialog() {
@@ -217,6 +228,82 @@ export default class Dashboard extends Vue {
 
   enableExportToFile() {
     this.displayCheckbox = !this.displayCheckbox;
+  }
+
+  exportCandidatesFile() {
+    const selectedCandidates = this.candidates.filter(
+      (candidate) => candidate.selected
+    );
+
+    const csvInput: any = [];
+    selectedCandidates.forEach((candidate) => {
+      const [name] = candidate.Name;
+      const [country] = candidate.ResumeCountry;
+      const [experience] = candidate.WorkedPeriod;
+
+      csvInput.push([
+        name.FormattedName,
+        country.Country,
+        experience.TotalExperienceInYear,
+        candidate.currentJobProfile,
+        candidate.email,
+        candidate.fileUrl,
+      ]);
+    });
+
+    var csvContent = "nombre;país;experiencia;trabajo_actual;email;url_cv\n";
+    csvInput.forEach(function (infoArray: any, index: number) {
+      const dataString = infoArray.join(";");
+      csvContent += index < csvInput.length ? dataString + "\n" : dataString;
+    });
+
+    this.download(
+      csvContent,
+      `export_${moment().format("DDMMYY_Hmmss")}.csv`,
+      "text/csv;encoding:utf-8"
+    );
+  }
+
+  get isSomeCandidateSelected() {
+    return this.candidates.some((candidate) => candidate.selected);
+  }
+
+  download(content: string, fileName: string, mimeType: string) {
+    var a = document.createElement("a");
+    mimeType = mimeType || "application/octet-stream";
+
+    if (navigator.msSaveBlob) {
+      navigator.msSaveBlob(
+        new Blob([content], {
+          type: mimeType,
+        }),
+        fileName
+      );
+    } else if (URL && "download" in a) {
+      a.href = URL.createObjectURL(
+        new Blob([content], {
+          type: mimeType,
+        })
+      );
+      a.setAttribute("download", fileName);
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } else {
+      location.href =
+        "data:application/octet-stream," + encodeURIComponent(content);
+    }
+  }
+
+  get selectedCandidatesCount(){
+    return this.candidates.filter((candidate) => candidate.selected).length
+  }
+
+  @Watch("allSelected")
+  selectAllCandidates() {
+    this.candidates.forEach(
+      (candidate) => (candidate.selected = this.allSelected)
+    );
   }
 }
 </script>
