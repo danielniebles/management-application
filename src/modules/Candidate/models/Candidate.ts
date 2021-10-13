@@ -21,9 +21,11 @@ export interface Candidate {
     TotalExperienceInMonths: string
     TotalExperienceInYear: string
     TotalExperienceRange: string
-  }
+  }[]
   currentJobProfile: string
   fileUrl: string
+  selected: boolean
+  email: string
   _id: string
 
 }
