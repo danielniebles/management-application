@@ -25,6 +25,7 @@ const routes: Array<RouteConfig> = [
     path: "/candidate/:id",
     name: "Candidate",
     component: Candidate,
+    meta: { requiresAuth: true },
     props: true
   },
   {

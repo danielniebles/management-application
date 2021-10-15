@@ -2,13 +2,12 @@
   <v-container class="col-12 fill-height">
     <v-row>
       <v-col cols="12" md="6">
-        <v-tabs>
+        <v-tabs :color="primaryColor">
           <div class="tabs-header">
             <v-tab v-for="section in candidateInfo" :key="section.sectionName">
               {{ section.displayName }}
             </v-tab>
           </div>
-
           <v-tab-item
             v-for="(section, levelOneIndex) in candidateInfo"
             :key="levelOneIndex"
@@ -83,21 +82,45 @@
         fab
         bottom
         fixed
-        direction="right"
-        transition="slide-x-transition"
+        right
+        direction="left"
+        transition="slide-x-reverse-transition"
       >
         <template v-slot:activator>
-          <v-btn v-model="fab" fab class="ml-4" small>
+          <v-btn v-model="fab" fab :class="primaryFabBtnClass">
             <v-icon v-if="!fab">mdi-account-circle</v-icon>
             <v-icon v-else>mdi-close</v-icon>
           </v-btn>
         </template>
-        <v-btn small fab @click="updateCandidate">
-          <v-icon>mdi-content-save</v-icon>
-        </v-btn>
-        <v-btn small fab @click="back">
-          <v-icon>mdi-arrow-left</v-icon>
-        </v-btn>
+        <v-tooltip top>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              small
+              fab
+              @click="updateCandidate"
+              v-on="on"
+              :class="primaryFabBtnClass"
+            >
+              <v-icon>mdi-content-save</v-icon>
+            </v-btn>
+          </template>
+          <span>Guardar</span>
+        </v-tooltip>
+
+        <v-tooltip top>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              small
+              fab
+              @click="back"
+              v-on="on"
+              :class="primaryFabBtnClass"
+            >
+              <v-icon>mdi-arrow-left</v-icon>
+            </v-btn>
+          </template>
+          <span>Atrás</span>
+        </v-tooltip>
       </v-speed-dial>
     </v-row>
   </v-container>
@@ -112,6 +135,7 @@ import "vue-pdf-app/dist/icons/main.css";
 import { Operation } from "./models/Operation";
 import { DashboardService } from "../Dashboard/DashboardService";
 import Snackbar from "../shared/components/Snackbar/Snackbar.vue";
+import { COLORS, STYLE_CLASSES } from "@/shared/StyleConstants";
 
 Vue.use(Vuetify);
 @Component({
@@ -122,6 +146,9 @@ Vue.use(Vuetify);
 export default class Candidate extends Vue {
   @Prop() fileUrl!: string;
   @Inject() dashboardService!: DashboardService;
+
+  primaryColor = COLORS.PRIMARY_COLOR;
+  primaryFabBtnClass = STYLE_CLASSES.PRIMARY_BTN_COMMON;
 
   page = 2;
   perPage = 2;

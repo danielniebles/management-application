@@ -4,7 +4,7 @@
       <v-container>
         <v-row>
           <v-col cols="1" md="1" align-self="start" v-if="displayCheckbox">
-            <v-checkbox @click="selectedCandidate" v-model="candidateInfo.selected"></v-checkbox>
+            <v-checkbox @click="selectedCandidate" v-model="candidateInfo.selected" :color="primaryColor"></v-checkbox>
           </v-col>
           <v-col cols="11" :md="displayCheckbox ? '8' : '9'">
             <v-card-title class="pa-0">
@@ -49,7 +49,7 @@
           </v-col>
           <v-col cols="12" md="3">
             <v-row justify="end" class="pa-5">
-              <v-btn @click="showCandidate">Ver</v-btn>
+              <v-btn :class="secondaryBtnClass" @click="showCandidate">Ver</v-btn>
             </v-row>
           </v-col>
         </v-row>
@@ -63,6 +63,7 @@ import { Component, Prop, Watch } from "vue-property-decorator";
 import Vuetify from "vuetify";
 import Vue from "vue";
 import { Candidate } from "@/modules/Candidate/models/Candidate";
+import { COLORS, STYLE_CLASSES } from "@/shared/StyleConstants"
 
 Vue.use(Vuetify);
 @Component({
@@ -76,6 +77,10 @@ Vue.use(Vuetify);
 export default class CanditateCard extends Vue {
   @Prop() private candidatesInfo!: Candidate;
   @Prop() private displayCheckbox!: boolean;
+
+  primaryColor = COLORS.PRIMARY_COLOR
+  secondaryColor = COLORS.SECONDARY_COLOR
+  secondaryBtnClass = STYLE_CLASSES.SECONDARY_BTN
 
   get Country() {
     return this.candidatesInfo["ResumeCountry"][0]["Country"] || "Colombia";
@@ -142,4 +147,5 @@ export default class CanditateCard extends Vue {
   min-width: 400px;
   max-width: 500px;
 }
+
 </style>

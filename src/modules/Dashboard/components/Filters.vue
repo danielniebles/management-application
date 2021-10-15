@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panels multiple tile>
+  <v-expansion-panels multiple tile accordion>
     <v-expansion-panel v-for="(operation, index) in operations" :key="index">
       <v-expansion-panel-header
         class="justify-self-start expansion-panel-header"
@@ -8,7 +8,7 @@
         disable-icon-rotate
       >
         <template v-slot:actions>
-          <v-icon class="icon" large color="#294661">{{ icon[index] }}</v-icon>
+          <v-icon class="icon" large >{{ icon[index] }}</v-icon>
         </template>
         <span class="header">{{ operation.displayName }}</span>
       </v-expansion-panel-header>
@@ -40,7 +40,7 @@ Vue.use(Vuetify);
 })
 export default class Filters extends Vue {
   @Prop() private cleanFlag!: boolean;
-  
+
   emitObject = {};
   operations = [
     {
@@ -119,7 +119,7 @@ export default class Filters extends Vue {
       value: this.operations[index].options[subIndex].value,
       key: this.operations[index].options[subIndex].rchilliKey,
     };
-    
+
     eventBus.$emit("filterAdded", this.emitObject);
   }
 
