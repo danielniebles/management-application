@@ -1,22 +1,9 @@
-$main-text-color: #294661;
+$main-text-color: black;
 
 .main-text-field {
   .v-input__control {
     .v-input__slot {
       border: #a2a2a2;
-
-      // padding: 0px !important;
-      // border-radius: 30px;
-      // box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
-      .v-text-field__slot {
-        // padding: 0px 0px 0px 0px;
-        // background: #e0e0e0;
-        // border-radius: 30px;
-        .v-label {
-          // color: #8797a7;
-          // padding-left: 12px;
-        }
-      }
     }
     .v-text-field__details {
       margin-bottom: 0px;
@@ -89,4 +76,8 @@ $main-text-color: #294661;
 
 .btn-primary{
   background: #FF5A34 !important;
+}
+
+.btn-secondary{
+  background: rgba(0,0,0,0.6) !important;
 }

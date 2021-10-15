@@ -2,9 +2,9 @@
   <v-card tile>
     <v-card-title>
       <v-list-item style="padding: 0px">
-        <h3 class="header">FILTROS</h3>
+        <h3 class="text-h6 font-weight-bold">FILTROS</h3>
         <v-row align="center" justify="end" class="mr-1">
-          <v-icon large color="#294661" @click="cleanFields">mdi-close</v-icon>
+          <v-icon large @click="cleanFields">mdi-close</v-icon>
           <h3 class="header">Limpiar</h3>
         </v-row>
       </v-list-item>
@@ -19,7 +19,7 @@
     <Filters :cleanFlag="cleanFlag" />
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn @click="search"> Buscar </v-btn>
+      <v-btn :class="primaryBtnClass" @click="search"> Buscar </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -31,6 +31,7 @@ import Vuetify from "vuetify";
 import Vue from "vue";
 import { eventBus } from "../../../main";
 import { DashboardService } from "@/modules/Dashboard/DashboardService";
+import { STYLE_CLASSES } from "@/shared/StyleConstants";
 
 Vue.use(Vuetify);
 @Component({
@@ -42,6 +43,8 @@ Vue.use(Vuetify);
 export default class FiltersPanel extends Vue {
   @Prop() private topSearch!: string;
   @Inject() dashboardService!: DashboardService;
+
+  primaryBtnClass = STYLE_CLASSES.PRIMARY_BTN
 
   searchEmits: any[] = [];
   filterKeys: string[] = [];

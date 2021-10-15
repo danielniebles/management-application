@@ -89,7 +89,7 @@ $button-active-blue: #1669f2;
   align-items: center;
 }
 .google-btn {
-  width: 215px;
+  width: 235px;
   height: 42px;
   background-color: $google-blue;
   border-radius: 2px;
@@ -126,7 +126,7 @@ $button-active-blue: #1669f2;
 }
 
 .google-btn-register {
-  width: 200px;
+  width: 235px;
   height: 42px;
   background-color: $white;
   border-radius: 2px;

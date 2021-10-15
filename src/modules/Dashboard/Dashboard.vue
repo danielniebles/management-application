@@ -26,10 +26,11 @@
                   <v-checkbox
                     :label="`Seleccionar todos (${selectedCandidatesCount} seleccionados)`"
                     v-model="allSelected"
+                    :color="primaryColor"
                   ></v-checkbox>
                 </v-col>
                 <v-col align-self="center">
-                  <v-btn @click="exportCandidatesFile">Exportar</v-btn>
+                  <v-btn :class="primaryBtnClass" @click="exportCandidatesFile">Exportar</v-btn>
                 </v-col>
               </v-row>
             </v-col>
@@ -38,6 +39,7 @@
                 v-model="page"
                 :length="candidatesPagsLength"
                 :total-visible="5"
+                :color="secondaryColor"
               ></v-pagination>
             </v-col>
           </v-row>
@@ -87,14 +89,14 @@
         transition="slide-x-reverse-transition"
       >
         <template v-slot:activator>
-          <v-btn v-model="fab" fab class="ml-4" small>
+          <v-btn v-model="fab" fab :class="primaryFabBtnClass">
             <v-icon v-if="!fab">mdi-account-circle</v-icon>
             <v-icon v-else>mdi-close</v-icon>
           </v-btn>
         </template>
         <v-tooltip top>
           <template v-slot:activator="{ on }">
-            <v-btn small fab @click="openUploadFileDialog" v-on="on">
+            <v-btn small fab @click="openUploadFileDialog" v-on="on" :class="primaryFabBtnClass">
               <v-icon>mdi-file-upload-outline</v-icon>
             </v-btn>
           </template>
@@ -102,7 +104,7 @@
         </v-tooltip>
         <v-tooltip top>
           <template v-slot:activator="{ on }">
-            <v-btn small fab @click="enableExportToFile" v-on="on">
+            <v-btn small fab @click="enableExportToFile" v-on="on" :class="primaryFabBtnClass">
               <v-icon>mdi-file-download</v-icon>
             </v-btn>
           </template>
@@ -136,7 +138,7 @@ import { DashboardService } from "@/modules/Dashboard/DashboardService";
 import { mapState } from "vuex";
 import { Candidate } from "../Candidate/models/Candidate";
 import moment from "moment";
-import { STYLE_CLASSES } from "@/shared/StyleConstants"
+import { COLORS, STYLE_CLASSES } from "@/shared/StyleConstants"
 
 Vue.use(Vuetify);
 @Component({
@@ -153,8 +155,9 @@ export default class Dashboard extends Vue {
   @Inject() dashboardService!: DashboardService;
 
   primaryBtnClass = STYLE_CLASSES.PRIMARY_BTN
-
-
+  primaryFabBtnClass = STYLE_CLASSES.PRIMARY_BTN_COMMON
+  primaryColor = COLORS.PRIMARY_COLOR
+  secondaryColor = COLORS.SECONDARY_COLOR
 
   candidates: Candidate[] = [];
   page = 1;
