@@ -10,4 +10,8 @@ declare global {
       [elem: string]: any;
     }
   }
+
+  interface Navigator {
+    msSaveBlob(prototype: Blob, string): void
+  }
 }

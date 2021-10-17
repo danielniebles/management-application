@@ -90,18 +90,18 @@
       >
         <template v-slot:activator>
           <v-btn v-model="fab" fab :class="primaryFabBtnClass">
-            <v-icon v-if="!fab">mdi-account-circle</v-icon>
+            <v-icon v-if="!fab">mdi-file-cog-outline</v-icon>
             <v-icon v-else>mdi-close</v-icon>
           </v-btn>
         </template>
-        <v-tooltip top>
+        <!-- <v-tooltip top>
           <template v-slot:activator="{ on }">
             <v-btn small fab @click="openUploadFileDialog" v-on="on" :class="primaryFabBtnClass">
               <v-icon>mdi-file-upload-outline</v-icon>
             </v-btn>
           </template>
           <span>Cargar CV</span>
-        </v-tooltip>
+        </v-tooltip> -->
         <v-tooltip top>
           <template v-slot:activator="{ on }">
             <v-btn small fab @click="enableExportToFile" v-on="on" :class="primaryFabBtnClass">
@@ -171,6 +171,8 @@ export default class Dashboard extends Vue {
   fab = false;
   allSelected = false;
 
+
+
   async mounted() {
     this.loadingData = true;
     if (this.currentSearch.length > 0) this.candidates = this.currentSearch;
@@ -187,6 +189,7 @@ export default class Dashboard extends Vue {
     this.candidates = await this.dashboardService.getFiltersResult({
       ["DetailResume"]: searchPattern,
     });
+    this.candidates.forEach((candidate) => Vue.set(candidate, "selected", false));
     this.topSearch = searchPattern;
     this.page = 1;
     this.$store.dispatch("updateSearch", this.candidates);
@@ -287,6 +290,7 @@ export default class Dashboard extends Vue {
   download(content: string, fileName: string, mimeType: string) {
     var a = document.createElement("a");
     mimeType = mimeType || "application/octet-stream";
+
 
     if (navigator.msSaveBlob) {
       navigator.msSaveBlob(
