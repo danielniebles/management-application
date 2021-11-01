@@ -35,14 +35,7 @@ $atome-orange-500: #FF5A34;
   }
 }
 
-.main-card {
-  .v-card__title {
-    padding: 16px 16px 0px;
-    .v-list-item {
-      padding: 0px;
-    }
-  }
-}
+
 
 .expansion-panel-header {
   .icon {
@@ -83,7 +76,7 @@ $atome-orange-500: #FF5A34;
 .btn-outlined {
   padding: 8px 22px !important;
   background: white;
-  color:  rgba(0, 0, 0, 0.6) !important;
+  color:  #545556 !important;
 }
 
 .v-btn--plain:not(.v-btn--active):not(.v-btn--loading):not(:focus):not(:hover) .v-btn__content {
@@ -98,9 +91,10 @@ $atome-orange-500: #FF5A34;
   }
 }
 
-
-
 .btn-secondary {
   background: rgba(0,0,0,0.6) !important;
 }
 
+.v-sheet.v-card:not(.v-sheet--outlined) {
+  box-shadow: 0px 4px 25px rgba(74, 74, 75, 0.25) !important;
+}

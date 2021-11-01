@@ -55,7 +55,7 @@
                 v-for="candidate in shownCandidates"
                 :key="candidate._id"
                 cols="12"
-                md="6"
+                md="12"
               >
                 <CandidateCard
                   :candidatesInfo="candidate"
