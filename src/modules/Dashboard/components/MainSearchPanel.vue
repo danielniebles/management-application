@@ -2,7 +2,7 @@
   <div>
     <v-row>
       <v-col cols="12" justify="end">
-        <v-text-field solo outlined @keyup.enter="onEnter" v-model="searchPattern" prefix="Buscar | "></v-text-field>
+        <v-text-field outlined color="black" @keyup.enter="onEnter" v-model="searchPattern" prefix="Buscar | " class="main-text-field"></v-text-field>
       </v-col>
     </v-row>
   </div>
@@ -12,6 +12,7 @@
 import { Component, Prop } from "vue-property-decorator";
 import Vuetify from "vuetify";
 import Vue from "vue";
+import Snackbar from "@/modules/shared/components/Snackbar/Snackbar.vue";
 
 Vue.use(Vuetify);
 @Component({
