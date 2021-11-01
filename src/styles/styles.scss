@@ -1,9 +1,10 @@
 $main-text-color: black;
+$atome-orange-500: #FF5A34;
 
 .main-text-field {
   .v-input__control {
     .v-input__slot {
-      border: #a2a2a2;
+      border: red;
     }
     .v-text-field__details {
       margin-bottom: 0px;
@@ -74,10 +75,32 @@ $main-text-color: black;
   color: black;
 }
 
-.btn-primary{
-  background: #FF5A34 !important;
+.btn-primary {
+  background: $atome-orange-500 !important;
+  padding: 8px 22px !important;
 }
 
-.btn-secondary{
+.btn-outlined {
+  padding: 8px 22px !important;
+  background: white;
+  color:  rgba(0, 0, 0, 0.6) !important;
+}
+
+.v-btn--plain:not(.v-btn--active):not(.v-btn--loading):not(:focus):not(:hover) .v-btn__content {
+  opacity: 1 !important;
+}
+
+.btn-outlined:hover {
+  color: white !important;
+  border: 1px solid $atome-orange-500;
+  .v-btn__content {
+    color: $atome-orange-500 !important;
+  }
+}
+
+
+
+.btn-secondary {
   background: rgba(0,0,0,0.6) !important;
 }
+
