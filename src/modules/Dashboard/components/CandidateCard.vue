@@ -1,5 +1,5 @@
 <template>
-  <v-card  :min-height="cardHeight">
+  <v-card :min-height="isGridActive ? '400px' : '200px'">
     <v-container fluid class="pa-7">
       <v-row>
         <v-col cols="1" md="auto" align-self="start" v-if="displayCheckbox">
@@ -9,17 +9,21 @@
             :color="primaryColor"
           ></v-checkbox>
         </v-col>
-        <v-col cols="auto" align-self="center">
-          <v-avatar size="140">
-            <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
-          </v-avatar>
+        <v-col :cols="isGridActive ? '12' : 'auto'" align-self="center">
+          <v-row justify="center">
+            <v-avatar size="140">
+              <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+            </v-avatar>
+          </v-row>
         </v-col>
-        <v-col cols="11" :md="displayCheckbox ? '5' : '6'" align-self="auto">
+        <v-col cols="11" :md="isGridActive ? '12' : '6'" align-self="auto">
           <div class="candidate__header">
             <p :class="subheaderHeavy + ' candidate__title'">
               {{ candidateInfo.name }}
             </p>
-            <p class="text-subtitle-1">{{ candidateInfo.jobProfile }}</p>
+            <p class="text-subtitle-1">
+              {{ candidateInfo.jobProfile || "N/A" }}
+            </p>
           </div>
 
           <div class="candidate__info">
@@ -35,9 +39,9 @@
             <p :class="bodyLight">Bogotá, Colombia</p>
           </div>
         </v-col>
-        <v-spacer></v-spacer>
-        <v-col cols="12" md="auto" align-self="center">
-          <v-row justify="end">
+        <v-spacer v-if="!isGridActive"></v-spacer>
+        <v-col cols="12" :md="isGridActive ? '12' : 'auto'" align-self="center">
+          <v-row :justify="isGridActive ? 'center' : 'end'">
             <v-col cols="auto" class="pr-0">
               <v-btn
                 outlined
@@ -79,6 +83,7 @@ Vue.use(Vuetify);
 })
 export default class CanditateCard extends Vue {
   @Prop() private candidatesInfo!: Candidate;
+  @Prop() private isGridActive!: boolean;
   @Prop() private displayCheckbox!: boolean;
 
   primaryColor = COLORS.PRIMARY_COLOR;
@@ -117,23 +122,6 @@ export default class CanditateCard extends Vue {
     );
   }
 
-  get cardHeight() {
-    switch (this.$vuetify.breakpoint.name) {
-      case "xs":
-        return "200px";
-      case "sm":
-        return "100px";
-      case "md":
-        return "170px";
-      case "lg":
-        return "170px";
-      case "xl":
-        return "170px";
-      default:
-        return "170px";
-    }
-  }
-
   selectedCandidate() {
     this.$emit("selectCandidate");
   }
@@ -163,8 +151,18 @@ p {
   color: $atome-orange-500;
 }
 
+.candidate__subtitle {
+  text-overflow: ellipsis;
+}
+
 .candidate__header {
   margin-bottom: 24px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  p {
+    width: 100%;
+  }
 }
 
 .candidate__info {
@@ -174,15 +172,5 @@ p {
   i {
     margin-right: 12px !important;
   }
-}
-
-img {
-  border-radius: 50%;
-  box-shadow: 0 0 15px #999;
-  width: 100%;
-}
-
-.test {
-  border-radius: 50%;
 }
 </style>

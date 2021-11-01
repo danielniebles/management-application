@@ -41,6 +41,7 @@
                 :total-visible="5"
                 :color="secondaryColor"
               ></v-pagination>
+              <v-btn @click="activateGridView">Hola</v-btn>
             </v-col>
           </v-row>
           <v-row>
@@ -55,11 +56,12 @@
                 v-for="candidate in shownCandidates"
                 :key="candidate._id"
                 cols="12"
-                md="12"
+                :md="isGridActive ? '4' : '12'"
               >
                 <CandidateCard
                   :candidatesInfo="candidate"
                   :displayCheckbox="displayCheckbox"
+                  :isGridActive="isGridActive"
                   @showCandidate="showCandidateInfo"
                   @selectCandidate="
                     selectCandidate(
@@ -170,6 +172,7 @@ export default class Dashboard extends Vue {
   displayCheckbox = false;
   fab = false;
   allSelected = false;
+  isGridActive = false;
 
 
 
@@ -324,6 +327,11 @@ export default class Dashboard extends Vue {
     this.candidates.forEach(
       (candidate) => (candidate.selected = this.allSelected)
     );
+  }
+
+  activateGridView(){
+    this.isGridActive = !this.isGridActive
+
   }
 }
 </script>
