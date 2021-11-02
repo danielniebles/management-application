@@ -1,31 +1,21 @@
 <template>
-  <v-expansion-panels multiple tile accordion>
-    <v-expansion-panel v-for="(operation, index) in operations" :key="index">
-      <v-expansion-panel-header
-        class="justify-self-start expansion-panel-header"
-        expand-icon=""
-        @click="toggleIcon(index)"
-        disable-icon-rotate
-      >
-        <template v-slot:actions>
-          <v-icon class="icon" large >{{ icon[index] }}</v-icon>
-        </template>
-        <span class="header">{{ operation.displayName }}</span>
-      </v-expansion-panel-header>
-      <v-expansion-panel-content>
-        <div v-for="(option, subIndex) in operation.options" :key="subIndex">
-          <v-text-field
-            :label="option.displayName"
-            outlined
-            v-model="operation.options[subIndex].value"
-            @change="onMouseUp(subIndex, index)"
-            class="main-text-field"
-          >
-          </v-text-field>
-        </div>
-      </v-expansion-panel-content>
-    </v-expansion-panel>
-  </v-expansion-panels>
+  <div>
+    <div v-for="(operation, index) in operations" :key="index">
+      <p class="text-subtitle-1">{{ operation.displayName }}</p>
+      <div v-for="(option, subIndex) in operation.options" :key="subIndex">
+        <v-text-field
+          :label="option.displayName"
+          outlined
+          v-model="operation.options[subIndex].value"
+          @change="onMouseUp(subIndex, index)"
+          color="black"
+          single-line
+          background-color="white"
+        >
+        </v-text-field>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -69,7 +59,7 @@ export default class Filters extends Vue {
           rchilliKey: "JobProfile_Title",
           displayName: "Cargo",
           value: "",
-        }
+        },
       ],
     },
     {
@@ -81,7 +71,7 @@ export default class Filters extends Vue {
           rchilliKey: "Skill",
           displayName: "Aptitud",
           value: "",
-        }
+        },
       ],
     },
     {
@@ -115,7 +105,7 @@ export default class Filters extends Vue {
 
   onMouseUp(subIndex: number, index: number) {
     this.emitObject = {
-    parentKey: this.operations[index].rchilliKey,
+      parentKey: this.operations[index].rchilliKey,
       value: this.operations[index].options[subIndex].value,
       key: this.operations[index].options[subIndex].rchilliKey,
     };
@@ -123,19 +113,17 @@ export default class Filters extends Vue {
     eventBus.$emit("filterAdded", this.emitObject);
   }
 
-  @Watch('cleanFlag')
-  cleanFields(){
-    this.operations.forEach( (operation) => {
-      operation.options.forEach( (option) => {
-        option.value = ""
-      })
-    })
-    eventBus.$emit('cleanedFields')
+  @Watch("cleanFlag")
+  cleanFields() {
+    this.operations.forEach((operation) => {
+      operation.options.forEach((option) => {
+        option.value = "";
+      });
+    });
+    eventBus.$emit("cleanedFields");
   }
 }
 </script>
 
 <style>
-
-
 </style>

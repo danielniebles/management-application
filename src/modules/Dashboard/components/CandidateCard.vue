@@ -16,7 +16,7 @@
             </v-avatar>
           </v-row>
         </v-col>
-        <v-col cols="11" :md="isGridActive ? '12' : '6'" align-self="auto">
+        <v-col cols="11" :md="isGridActive ? '12' : '5'" align-self="auto">
           <div class="candidate__header">
             <p :class="subheaderHeavy + ' candidate__title'">
               {{ candidateInfo.name }}

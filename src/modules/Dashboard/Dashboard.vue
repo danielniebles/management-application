@@ -1,12 +1,12 @@
 <template>
-  <v-container class="col-12">
+  <div class="pa-0 test">
     <v-row justify="center">
       <v-container>
         <MainSearchPanel @onSearchEnter="onSearchEnter"></MainSearchPanel>
       </v-container>
     </v-row>
     <v-divider></v-divider>
-    <v-container fill-heigth fluid>
+    <v-container fluid class="workspace__container">
       <v-row>
         <v-col cols="12" md="3">
           <FiltersPanel
@@ -34,6 +34,17 @@
                 </v-col>
               </v-row>
             </v-col>
+            <v-col v-else align-self="center">
+              <v-row>
+
+              <v-btn  elevation="0" :color="workspaceColor" small @click="activateGridView">
+                <v-icon :color="secondaryColor">mdi-view-grid</v-icon>
+              </v-btn>
+              <v-btn  elevation="0" :color="workspaceColor" small @click="deactivateGridView">
+                <v-icon :color="secondaryColor">mdi-menu</v-icon>
+              </v-btn>
+              </v-row>
+            </v-col>
             <v-col cols="auto" align-self="center">
               <v-pagination
                 v-model="page"
@@ -41,7 +52,6 @@
                 :total-visible="5"
                 :color="secondaryColor"
               ></v-pagination>
-              <v-btn @click="activateGridView">Hola</v-btn>
             </v-col>
           </v-row>
           <v-row>
@@ -56,7 +66,7 @@
                 v-for="candidate in shownCandidates"
                 :key="candidate._id"
                 cols="12"
-                :md="isGridActive ? '4' : '12'"
+                :md="isGridActive ? '6' : '12'"
               >
                 <CandidateCard
                   :candidatesInfo="candidate"
@@ -125,7 +135,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-container>
+  </div>
 </template>
 
 <script lang="ts">
@@ -160,6 +170,7 @@ export default class Dashboard extends Vue {
   primaryFabBtnClass = STYLE_CLASSES.PRIMARY_BTN_COMMON
   primaryColor = COLORS.PRIMARY_COLOR
   secondaryColor = COLORS.SECONDARY_COLOR
+  workspaceColor = COLORS.WORKSPACE_COLOR
 
   candidates: Candidate[] = [];
   page = 1;
@@ -330,8 +341,11 @@ export default class Dashboard extends Vue {
   }
 
   activateGridView(){
-    this.isGridActive = !this.isGridActive
+    this.isGridActive = true
+  }
 
+  deactivateGridView(){
+    this.isGridActive = false
   }
 }
 </script>
@@ -343,6 +357,15 @@ export default class Dashboard extends Vue {
 }
 .pagination {
   height: 4rem;
-  padding-left: 1.5rem;
+  padding-left: 0.25rem;
+}
+
+.workspace__container{
+  background-color: #f6f7f7;
+  height: 100%;
+}
+
+.test{
+  height: 100%;
 }
 </style>
