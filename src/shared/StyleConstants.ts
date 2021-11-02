@@ -13,7 +13,8 @@ export const TEXT_CLASSES = {
 
 export const COLORS = {
   PRIMARY_COLOR: "#FF5A34",
-  SECONDARY_COLOR: "rgba(0, 0, 0, 0.6)",
+  SECONDARY_COLOR: "#545556",
+  WORKSPACE_COLOR: "#f6f7f7",
   SUCCESS: "#3CC13B",
   WARNING: "#F3BB1C",
   ERROR: "#F03738",
