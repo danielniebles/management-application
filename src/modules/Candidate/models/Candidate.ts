@@ -22,6 +22,14 @@ export interface Candidate {
     TotalExperienceInYear: string
     TotalExperienceRange: string
   }[]
+  PhoneNumber: {
+    ConfidenceScore: number
+    FormattedNumber: string
+    ISDCode: string
+    Number: string
+    OriginalNumber: string
+    Type: string
+  }[]
   currentJobProfile: string
   fileUrl: string
   selected: boolean
