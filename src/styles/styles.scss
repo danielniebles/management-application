@@ -93,8 +93,38 @@ $atome-orange-500: #FF5A34;
 
 .btn-secondary {
   background: rgba(0,0,0,0.6) !important;
+  padding: 8px 22px !important;
 }
 
 .v-sheet.v-card:not(.v-sheet--outlined) {
   box-shadow: 0px 4px 25px rgba(74, 74, 75, 0.25) !important;
 }
+
+.theme--light.v-pagination .v-pagination__item{
+  background: transparent !important;
+}
+
+.theme--light.v-pagination .v-pagination__item--active{
+  background: $atome-orange-500 !important;
+}
+
+.v-pagination__item {
+  box-shadow: none !important;
+}
+
+.theme--light.v-pagination .v-pagination__item:hover:not(.v-pagination__item--active) {
+  background: #D3D5D8 !important;
+}
+
+.theme--light.v-pagination .v-pagination__navigation {
+  background: transparent !important;
+}
+
+.theme--light.v-pagination .v-pagination__navigation:hover {
+  background: #D3D5D8 !important;
+}
+
+.v-pagination__navigation{
+  box-shadow: none !important;
+}
+

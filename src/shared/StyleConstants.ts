@@ -1,6 +1,6 @@
 export const STYLE_CLASSES = {
   PRIMARY_BTN: "btn-primary white--text",
-  SECONDARY_BTN: "btn-secondary rounded-pill white--text",
+  SECONDARY_BTN: "btn-secondary white--text",
   PRIMARY_BTN_COMMON: "btn-primary white--text",
   OUTLINED_BTN: "btn-outlined"
 }
