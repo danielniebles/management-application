@@ -55,7 +55,6 @@ import Snackbar from "./modules/shared/components/Snackbar/Snackbar.vue";
     ...mapState({
       user: "user",
     }),
-    // other stuff
   },
 })
 export default class App extends Vue {
@@ -71,7 +70,13 @@ export default class App extends Vue {
   }
 
   get userPic() {
-    return this.user.picture;
+    return this.user ? this.user.picture : "";
+  }
+
+  mounted(){
+    console.log(this.user);
+
+
   }
 }
 </script>

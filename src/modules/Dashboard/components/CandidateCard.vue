@@ -42,10 +42,10 @@
               <v-icon>mdi-email-outline</v-icon>
               <p :class="bodyLight">{{ candidateInfo.email }}</p>
             </div>
-            <!-- <div class="candidate__info">
+            <div class="candidate__info">
               <v-icon>mdi-phone-outline</v-icon>
               <p :class="bodyLight">{{ candidateInfo.phone }}</p>
-            </div> -->
+            </div>
             <div class="candidate__info">
               <v-icon>mdi-map-marker-outline</v-icon>
               <p :class="bodyLight">{{ candidateInfo.country }}</p>
@@ -126,13 +126,13 @@ export default class CanditateCard extends Vue {
     const [ name ] = this.candidatesInfo.Name;
     const [ country ] = this.candidatesInfo.ResumeCountry;
     const [ experience ] = this.candidatesInfo.WorkedPeriod;
-    //const [ phone ] = this.candidatesInfo.PhoneNumber;
+    const [ phone ] = this.candidatesInfo.PhoneNumber;
     return {
       name: name.FormattedName ?? "",
       country: country.Country || "Colombia",
       experience: experience.TotalExperienceInYear ?? "",
       email: this.candidatesInfo.email,
-      //phone: phone.FormattedNumber,
+      phone: phone.FormattedNumber,
       jobProfile: this.candidatesInfo.currentJobProfile,
       id: this.candidatesInfo._id,
       fileUrl: this.candidatesInfo.fileUrl,
@@ -151,7 +151,6 @@ export default class CanditateCard extends Vue {
   selectedCandidate() {
     this.$emit("selectCandidate");
   }
-
 }
 </script>
 
