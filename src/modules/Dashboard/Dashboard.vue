@@ -1,12 +1,12 @@
 <template>
-  <v-container class="col-12">
+  <div class="pa-0 dashboard__container">
     <v-row justify="center">
       <v-container>
         <MainSearchPanel @onSearchEnter="onSearchEnter"></MainSearchPanel>
       </v-container>
     </v-row>
     <v-divider></v-divider>
-    <v-container fill-heigth fluid>
+    <v-container fluid class="workspace__container">
       <v-row>
         <v-col cols="12" md="3">
           <FiltersPanel
@@ -16,32 +16,58 @@
         </v-col>
         <v-divider vertical></v-divider>
         <v-col cols="12" class="mt-5" md="9">
-          <v-row
-            :justify="displayCheckbox ? 'space-between' : 'end'"
-            class="pagination"
-          >
-            <v-col v-if="displayCheckbox">
+          <v-row class="ml-1 mr-2">
+            <v-col align-self="center">
               <v-row>
-                <v-col cols="auto">
+                <v-btn
+                  fab
+                  elevation="0"
+                  :color="workspaceColor"
+                  small
+                  @click="activateGridView"
+                  v-blur
+                >
+                  <v-icon :color="secondaryColor">mdi-view-grid</v-icon>
+                </v-btn>
+                <v-btn
+                  fab
+                  elevation="0"
+                  :color="workspaceColor"
+                  small
+                  @click="deactivateGridView"
+                  v-blur
+                >
+                  <v-icon :color="secondaryColor">mdi-menu</v-icon>
+                </v-btn>
+              </v-row>
+            </v-col>
+
+            <v-col cols="auto" align-self="center">
+              <v-row align-content="center">
+              <v-btn :class="secondaryBtnClass" @click="exportCandidatesFile" :disabled="selectedCandidatesCount < 1">
+                <v-icon>mdi-tray-arrow-down</v-icon>
+                Descargar
+              </v-btn>
+
+              <v-pagination
+                v-model="page"
+                :length="candidatesPagsLength"
+                :total-visible="5"
+                :color="primaryColor"
+                circle
+              ></v-pagination>
+              </v-row>
+            </v-col>
+          </v-row>
+          <v-row justify="end" class="mr-5">
+            <v-col cols="auto" align-self="center" class="pa-0">
                   <v-checkbox
                     :label="`Seleccionar todos (${selectedCandidatesCount} seleccionados)`"
                     v-model="allSelected"
                     :color="primaryColor"
                   ></v-checkbox>
-                </v-col>
-                <v-col align-self="center">
-                  <v-btn :class="primaryBtnClass" @click="exportCandidatesFile">Exportar</v-btn>
-                </v-col>
-              </v-row>
             </v-col>
-            <v-col cols="auto" align-self="center">
-              <v-pagination
-                v-model="page"
-                :length="candidatesPagsLength"
-                :total-visible="5"
-                :color="secondaryColor"
-              ></v-pagination>
-            </v-col>
+
           </v-row>
           <v-row>
             <v-col
@@ -54,12 +80,12 @@
               <v-col
                 v-for="candidate in shownCandidates"
                 :key="candidate._id"
-                cols="12"
-                md="6"
+                :cols="isGridActive ? gridCardsCnt : '12'"
               >
                 <CandidateCard
                   :candidatesInfo="candidate"
                   :displayCheckbox="displayCheckbox"
+                  :isGridActive="isGridActive"
                   @showCandidate="showCandidateInfo"
                   @selectCandidate="
                     selectCandidate(
@@ -70,7 +96,7 @@
               </v-col>
             </v-row>
             <v-row v-if="loadingData" class="col-12">
-              <v-col v-for="n in 12" :key="n" cols="12" md="6" class="pa-2">
+              <v-col v-for="n in 12" :key="n" cols="12" class="pa-2">
                 <v-skeleton-loader
                   type="card-heading, list-item-three-line"
                 ></v-skeleton-loader>
@@ -79,38 +105,6 @@
           </v-row>
         </v-col>
       </v-row>
-      <v-speed-dial
-        v-model="fab"
-        fab
-        bottom
-        fixed
-        right
-        direction="left"
-        transition="slide-x-reverse-transition"
-      >
-        <template v-slot:activator>
-          <v-btn v-model="fab" fab :class="primaryFabBtnClass">
-            <v-icon v-if="!fab">mdi-file-cog-outline</v-icon>
-            <v-icon v-else>mdi-close</v-icon>
-          </v-btn>
-        </template>
-        <!-- <v-tooltip top>
-          <template v-slot:activator="{ on }">
-            <v-btn small fab @click="openUploadFileDialog" v-on="on" :class="primaryFabBtnClass">
-              <v-icon>mdi-file-upload-outline</v-icon>
-            </v-btn>
-          </template>
-          <span>Cargar CV</span>
-        </v-tooltip> -->
-        <v-tooltip top>
-          <template v-slot:activator="{ on }">
-            <v-btn small fab @click="enableExportToFile" v-on="on" :class="primaryFabBtnClass">
-              <v-icon>mdi-file-download</v-icon>
-            </v-btn>
-          </template>
-          <span>Exportar</span>
-        </v-tooltip>
-      </v-speed-dial>
     </v-container>
     <v-dialog v-model="dialog" max-width="600">
       <v-card class="pa-5">
@@ -123,7 +117,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-container>
+  </div>
 </template>
 
 <script lang="ts">
@@ -138,7 +132,7 @@ import { DashboardService } from "@/modules/Dashboard/DashboardService";
 import { mapState } from "vuex";
 import { Candidate } from "../Candidate/models/Candidate";
 import moment from "moment";
-import { COLORS, STYLE_CLASSES } from "@/shared/StyleConstants"
+import { COLORS, STYLE_CLASSES } from "@/shared/StyleConstants";
 
 Vue.use(Vuetify);
 @Component({
@@ -154,10 +148,12 @@ export default class Dashboard extends Vue {
   public currentSearch!: [];
   @Inject() dashboardService!: DashboardService;
 
-  primaryBtnClass = STYLE_CLASSES.PRIMARY_BTN
-  primaryFabBtnClass = STYLE_CLASSES.PRIMARY_BTN_COMMON
-  primaryColor = COLORS.PRIMARY_COLOR
-  secondaryColor = COLORS.SECONDARY_COLOR
+  primaryBtnClass = STYLE_CLASSES.PRIMARY_BTN;
+  primaryFabBtnClass = STYLE_CLASSES.PRIMARY_BTN_COMMON;
+  secondaryBtnClass = STYLE_CLASSES.SECONDARY_BTN
+  primaryColor = COLORS.PRIMARY_COLOR;
+  secondaryColor = COLORS.SECONDARY_COLOR;
+  workspaceColor = COLORS.WORKSPACE_COLOR;
 
   candidates: Candidate[] = [];
   page = 1;
@@ -170,8 +166,7 @@ export default class Dashboard extends Vue {
   displayCheckbox = false;
   fab = false;
   allSelected = false;
-
-
+  isGridActive = false;
 
   async mounted() {
     this.loadingData = true;
@@ -189,7 +184,9 @@ export default class Dashboard extends Vue {
     this.candidates = await this.dashboardService.getFiltersResult({
       ["DetailResume"]: searchPattern,
     });
-    this.candidates.forEach((candidate) => Vue.set(candidate, "selected", false));
+    this.candidates.forEach((candidate) =>
+      Vue.set(candidate, "selected", false)
+    );
     this.topSearch = searchPattern;
     this.page = 1;
     this.$store.dispatch("updateSearch", this.candidates);
@@ -291,7 +288,6 @@ export default class Dashboard extends Vue {
     var a = document.createElement("a");
     mimeType = mimeType || "application/octet-stream";
 
-
     if (navigator.msSaveBlob) {
       navigator.msSaveBlob(
         new Blob([content], {
@@ -325,6 +321,37 @@ export default class Dashboard extends Vue {
       (candidate) => (candidate.selected = this.allSelected)
     );
   }
+
+  activateGridView() {
+    this.isGridActive = true;
+  }
+
+  deactivateGridView() {
+    this.isGridActive = false;
+  }
+
+   get gridCardsCnt() {
+    switch (this.$vuetify.breakpoint.name) {
+      case "xs":
+        return "12";
+      case "sm":
+        return "12";
+      case "md":
+        return "6";
+      case "lg":
+        return "6";
+      case "xl":
+        return "4";
+      default:
+        return "2";
+    }
+  }
+
+  @Watch("$vuetify.breakpoint.name")
+  hola(){
+    console.log(this.$vuetify.breakpoint.name);
+
+  }
 }
 </script>
 
@@ -333,8 +360,17 @@ export default class Dashboard extends Vue {
   display: flex;
   justify-content: center;
 }
-.pagination {
+/* .pagination {
   height: 4rem;
-  padding-left: 1.5rem;
+  padding-left: 0.25rem;
+} */
+
+.workspace__container {
+  background-color: #f6f7f7;
+  height: 100%;
+}
+
+.dashboard__container {
+  height: 100%;
 }
 </style>

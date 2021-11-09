@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="provider__container">
       <slot></slot>
   </div>
 </template>
@@ -17,6 +17,9 @@ export default class ServiceProvider extends Vue {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+.provider__container{
+  height: 100%;
+}
 
 </style>

@@ -10,6 +10,12 @@ export const eventBus = new Vue();
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
+Vue.directive('blur', {
+  inserted: function (el) {
+    el.onfocus = (ev) => (ev.target as unknown as HTMLElement).blur()
+  }
+});
+
 new Vue({
   router,
   store,

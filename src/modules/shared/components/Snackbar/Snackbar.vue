@@ -3,15 +3,16 @@
     <v-snackbar
       id="snackbar"
       v-model="snackbar"
-      min-width="0 !important"
-      max-width="70vw"
-      top
+      elevation="0"
+      bottom
       :color="snackbarColor"
     >
-      <v-icon class="mx-2">{{ icon }}</v-icon>
-      <span class="snackbar-msg">
-        <b>{{ message }}</b>
+    <div class="snackbar__wrapper">
+      <v-icon class="mr-4">{{ icon }}</v-icon>
+      <span>
+       {{ message }}
       </span>
+    </div>
       <template v-slot:action="{ attrs }">
         <v-btn
           id="snackbarCloseBtn"
@@ -19,7 +20,7 @@
           @click.native="close()"
           v-bind="attrs"
         >
-          <v-icon>mdi-close-circle-outline</v-icon>
+          <v-icon>mdi-close</v-icon>
         </v-btn>
       </template>
     </v-snackbar>
@@ -31,8 +32,8 @@
 import { Component } from "vue-property-decorator";
 import Vuetify from "vuetify";
 import Vue from "vue";
-import EventBus from "@/EventBus";
 import { eventBus } from "../../../../main"
+import { COLORS } from "@/shared/StyleConstants";
 
 Vue.use(Vuetify);
 @Component({
@@ -45,7 +46,6 @@ export default class Snackbar extends Vue {
   snackbarColor = "";
 
   mounted() {
-    /* eslint-disable  @typescript-eslint/no-explicit-any */    
     eventBus.$on('SnackData', (payload: any) => {
       this.message = payload.msg;
       this.icon = payload.icon;
@@ -58,7 +58,7 @@ export default class Snackbar extends Vue {
     eventBus.$emit('SnackData', {
       msg,
       icon: 'mdi-check',
-      color: '#69d1c5'
+      color: COLORS.SUCCESS
     });
   }
 
@@ -66,15 +66,15 @@ export default class Snackbar extends Vue {
     eventBus.$emit('SnackData', {
       msg,
       icon: 'mdi-alert',
-      color: '#f7a072'
+      color: COLORS.WARNING
     });
   }
 
-  static popError(msg: string) {    
+  static popError(msg: string) {
     eventBus.$emit('SnackData', {
       msg,
       icon: 'mdi-close-circle',
-      color: '#f39a9d'
+      color: COLORS.ERROR
     });
   }
 
@@ -82,7 +82,7 @@ export default class Snackbar extends Vue {
     eventBus.$emit('SnackData', {
       msg,
       icon: 'mdi-information',
-      color: '#9cc4d5'
+      color: COLORS.INFO
     });
   }
 
@@ -93,22 +93,9 @@ export default class Snackbar extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@media (max-width: 770px) {
-  .snackbar-msg {
-    font-size: 2vw;
-  }
-}
-
-@media (max-width: 450px) {
-  .snackbar-msg {
-    font-size: 3.3vw;
-  }
-}
-
-::v-deep {
-  .v-snack__wrapper {
-    min-width: 0px !important;
-    max-width: 100vw !important;
-  }
+.snackbar__wrapper {
+  display: flex;
+  max-width: 270px;
+  font-weight: 400;
 }
 </style>

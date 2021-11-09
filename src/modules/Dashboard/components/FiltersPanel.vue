@@ -1,27 +1,19 @@
 <template>
-  <v-card tile>
-    <v-card-title>
-      <v-list-item style="padding: 0px">
-        <h3 class="text-h6 font-weight-bold">FILTROS</h3>
-        <v-row align="center" justify="end" class="mr-1">
-          <v-icon large @click="cleanFields">mdi-close</v-icon>
-          <h3 class="header">Limpiar</h3>
-        </v-row>
-      </v-list-item>
-      <v-text-field
-        solo
+  <div class="filters__container">
+    <h6 class="text-h6 pb-6">Filtros</h6>
+    <v-text-field
         outlined
         v-model="jobProfile"
-        prefix="Cargo actual |"
-        class="mt-3"
+        label="Cargo actual"
+        color="black"
+        single-line
+        background-color="white"
       ></v-text-field>
-    </v-card-title>
     <Filters :cleanFlag="cleanFlag" />
-    <v-card-actions>
-      <v-spacer></v-spacer>
+    <v-row justify="end">
       <v-btn :class="primaryBtnClass" @click="search"> Buscar </v-btn>
-    </v-card-actions>
-  </v-card>
+    </v-row>
+  </div>
 </template>
 
 <script lang="ts">
@@ -44,7 +36,7 @@ export default class FiltersPanel extends Vue {
   @Prop() private topSearch!: string;
   @Inject() dashboardService!: DashboardService;
 
-  primaryBtnClass = STYLE_CLASSES.PRIMARY_BTN
+  primaryBtnClass = STYLE_CLASSES.PRIMARY_BTN;
 
   searchEmits: any[] = [];
   filterKeys: string[] = [];
@@ -166,5 +158,9 @@ export default class FiltersPanel extends Vue {
 </script>
 
 <style lang="scss" scoped>
+.filters__container {
+  padding: 18px;
+  height: 100%;
+}
 </style>
 
