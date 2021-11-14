@@ -7,7 +7,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     user: null,
-    currentSearch: []
+    currentSearch: [],
+    currentFilters: [] as { key: string, parentKey: string, value: string, name: string }[]
   },
   mutations: {
     SET_USER_DATA(state, userData) {
@@ -23,6 +24,19 @@ export default new Vuex.Store({
     },
     SET_CURRENT_SEARCH(state, candidates){
       state.currentSearch = candidates;
+    },
+    ADD_FILTER(state, filter){
+      state.currentFilters.push(filter)
+    },
+    UPDATE_FILTER(state, payload){
+      const { index, newFilter } = payload
+      state.currentFilters.splice(index, 1, newFilter)
+    },
+    REMOVE_FILTER(state, index){
+      state.currentFilters.splice(index, 1)
+    },
+    CLEAR_FILTERS(state){
+      state.currentFilters.splice(0)
     }
   },
   actions: {
@@ -49,12 +63,18 @@ export default new Vuex.Store({
     },
     updateSearch({ commit }, candidates){
       commit("SET_CURRENT_SEARCH", candidates)
+    },
+    updateFilters({ state, commit }, newFilter){
+      const index = state.currentFilters.findIndex((filter) => filter.key === newFilter.key);
+      index === -1 ? commit("ADD_FILTER", newFilter) : commit("UPDATE_FILTER", {index, newFilter})
     }
+
   },
   getters: {
     loggedIn(state) {
       return !!state.user;
     },
+    getCurrentFilters: state => state.currentFilters
   },
   modules: {},
 });
