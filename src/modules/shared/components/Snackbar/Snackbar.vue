@@ -45,12 +45,15 @@ export default class Snackbar extends Vue {
   snackbarColor = "";
 
   mounted() {
-    eventBus.$on("SnackData", (payload: any) => {
-      this.message = payload.msg;
-      this.icon = payload.icon;
-      this.snackbarColor = payload.color;
-      this.snackbar = true;
-    });
+    eventBus.$on(
+      "SnackData",
+      (payload: { msg: string; icon: string; color: string }) => {
+        this.message = payload.msg;
+        this.icon = payload.icon;
+        this.snackbarColor = payload.color;
+        this.snackbar = true;
+      }
+    );
   }
 
   static popSuccess(msg: string) {

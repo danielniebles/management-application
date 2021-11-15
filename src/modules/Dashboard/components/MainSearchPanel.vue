@@ -34,13 +34,16 @@
 </template>
 
 <script lang="ts">
-import { Component, Inject, Prop, Watch } from "vue-property-decorator";
+import { Component, Inject, Watch } from "vue-property-decorator";
 import Vuetify from "vuetify";
 import Vue from "vue";
 import Snackbar from "@/modules/shared/components/Snackbar/Snackbar.vue";
 import { mapGetters } from "vuex";
 import store from "@/store";
 import { DashboardService } from "../DashboardService";
+import { Filter } from "../models/Filter";
+import { FilterInfo } from "../models/FilterInfo";
+import { ComposedFilter } from "../models/ComposedFilter";
 
 Vue.use(Vuetify);
 @Component({
@@ -54,18 +57,18 @@ Vue.use(Vuetify);
 export default class MainSearchPanel extends Vue {
   @Inject() dashboardService!: DashboardService;
 
-  model: { key: string; parentKey: string; value: string }[] = [];
-  currentFilters!: { key: string; parentKey: string; value: string }[];
+  model: FilterInfo[] = [];
+  currentFilters!: FilterInfo[];
 
   mounted() {
     this.model = this.currentFilters;
   }
 
   @Watch("model")
-  addFilterFromBar(val: any, prev: any) {
+  addFilterFromBar(val: FilterInfo[], prev: FilterInfo[]) {
     if (val.length === prev.length) return;
 
-    this.model = val.map((item: any) => {
+    this.model = val.map((item: string | FilterInfo) => {
       if (typeof item === "string") {
         item = this.buildFilter(item);
       }
@@ -75,7 +78,7 @@ export default class MainSearchPanel extends Vue {
 
   @Watch("currentFilters")
   addCustomFilter() {
-    const newFilters: { key: string; parentKey: string; value: string }[] = [];
+    const newFilters: FilterInfo[] = [];
     this.currentFilters.forEach((filter) => {
       const index = this.model.findIndex(
         (currentFilter) => currentFilter.key === filter.key
@@ -162,38 +165,36 @@ export default class MainSearchPanel extends Vue {
   }
 
   buildSearchObject() {
-    const searchItemsArray: any[] = [];
+    const searchItemsArray: ComposedFilter[] = [];
     const filtersObjectArray = this.buildFiltersObjectArray(this.model);
-    const parentKeys = filtersObjectArray.map(
-      (item: any) => Object.keys(item)[0]
-    );
+    const parentKeys = filtersObjectArray.map((item) => Object.keys(item)[0]);
     const uniqueParentKeys = [...new Set(parentKeys)];
 
     uniqueParentKeys.forEach((key: string) => {
       const matchingSearchItems = filtersObjectArray.filter(
-        (item: any) => key in item
+        (item) => key in item
       );
-      const searchItemKeys = matchingSearchItems.map((item: any) => item[key]);
+      const searchItemKeys = matchingSearchItems.map((item) => item[key]);
       const formattedSearchItem = {
         [key]: ["DetailResume", "JobProfile"].includes(key)
           ? searchItemKeys[0]
           : searchItemKeys,
       };
 
-      searchItemsArray.push(formattedSearchItem);
+      searchItemsArray.push(formattedSearchItem as ComposedFilter);
     });
 
     return this.createObjectFromArray(searchItemsArray);
   }
 
-  buildFiltersObjectArray(filtersArray: any) {
-    const filtersObjectArray: any[] = [];
-    filtersArray.forEach((item: any) => {
+  buildFiltersObjectArray(filtersArray: FilterInfo[]) {
+    const filtersObjectArray: Filter[] = [];
+    filtersArray.forEach((item) => {
       if (item.parentKey === item.key) {
         filtersObjectArray.push({ [item.key]: item.value });
       } else {
         const [key, subKey] = item.key.split("_");
-        const filterObject: any = subKey
+        const filterObject: Filter = subKey
           ? {
               [item.parentKey]: {
                 [key]: {
@@ -212,9 +213,9 @@ export default class MainSearchPanel extends Vue {
     return filtersObjectArray;
   }
 
-  createObjectFromArray(inputArray: any[]) {
-    const dataObject: any = {};
-    inputArray.forEach((item: any) => {
+  createObjectFromArray(inputArray: unknown[]) {
+    const dataObject = {};
+    inputArray.forEach((item: unknown) => {
       Object.assign(dataObject, item);
     });
     return dataObject;

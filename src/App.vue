@@ -72,10 +72,6 @@ export default class App extends Vue {
   get userPic() {
     return this.user ? this.user.picture : "";
   }
-
-  mounted() {
-    console.log(this.user);
-  }
 }
 </script>
 

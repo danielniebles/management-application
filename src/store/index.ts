@@ -63,7 +63,7 @@ export default new Vuex.Store({
           commit("SET_USER_DATA", data);
         });
     },
-    logout({ commit }, payload) {
+    logout({ commit }) {
       commit("CLEAR_USER_DATA");
     },
     updateSearch({ commit }, candidates) {

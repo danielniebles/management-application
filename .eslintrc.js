@@ -4,8 +4,8 @@ module.exports = {
     node: true,
   },
   extends: [
-    "plugin:vue/essential",
     "eslint:recommended",
+    "plugin:vue/essential",
     "@vue/typescript/recommended",
     "@vue/prettier",
     "@vue/prettier/@typescript-eslint",
@@ -14,9 +14,9 @@ module.exports = {
     ecmaVersion: 2020,
   },
   rules: {
+    "@typescript-eslint/explicit-module-boundary-types": "off",
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off"
   },
   overrides: [
     {
