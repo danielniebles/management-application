@@ -3,7 +3,11 @@
     <h6 class="text-h6 pb-6">Filtros</h6>
     <div v-for="(operation, index) in operations" :key="index">
       <p class="text-subtitle-1">{{ operation.displayName }}</p>
-      <div v-for="(option, subIndex) in operation.options" :key="subIndex" class="filter__container">
+      <div
+        v-for="(option, subIndex) in operation.options"
+        :key="subIndex"
+        class="filter__container"
+      >
         <v-text-field
           :label="option.displayName"
           outlined
@@ -14,7 +18,14 @@
           @keyup.enter="addFilter(subIndex, index)"
         >
         </v-text-field>
-        <v-btn fab small class="ma-2" v-blur :color="primaryColor" @click="addFilter(subIndex, index)">
+        <v-btn
+          fab
+          small
+          class="ma-2"
+          v-blur
+          :color="primaryColor"
+          @click="addFilter(subIndex, index)"
+        >
           <v-icon color="white">mdi-chevron-right</v-icon>
         </v-btn>
       </div>
@@ -28,15 +39,14 @@ import Vuetify from "vuetify";
 import Vue from "vue";
 import { eventBus } from "../../../main";
 import { COLORS } from "@/shared/StyleConstants";
-import store from "@/store"
+import store from "@/store";
 
 Vue.use(Vuetify);
 @Component({
   name: "Filters",
 })
 export default class Filters extends Vue {
-
-  primaryColor = COLORS.PRIMARY_COLOR
+  primaryColor = COLORS.PRIMARY_COLOR;
 
   emitObject = {};
   operations = [
@@ -50,7 +60,7 @@ export default class Filters extends Vue {
           displayName: "Cargo actual",
           name: "cargo-actual",
           value: "",
-        }
+        },
       ],
     },
     {
@@ -124,19 +134,19 @@ export default class Filters extends Vue {
       parentKey: this.operations[index].rchilliKey,
       value: this.operations[index].options[subIndex].value,
       key: this.operations[index].options[subIndex].rchilliKey,
-      name: this.operations[index].options[subIndex].name
+      name: this.operations[index].options[subIndex].name,
     };
 
-    this.operations[index].options[subIndex].value = ""
+    this.operations[index].options[subIndex].value = "";
 
     eventBus.$emit("filterAdded", this.emitObject);
-    store.dispatch("updateFilters", this.emitObject)
+    store.dispatch("updateFilters", this.emitObject);
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.filter__container{
+.filter__container {
   display: flex;
 }
 
@@ -144,5 +154,4 @@ export default class Filters extends Vue {
   padding: 18px;
   height: 100%;
 }
-
 </style>

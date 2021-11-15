@@ -16,8 +16,14 @@
           @click:clear="clearFilters"
         >
           <template v-slot:selection="{ item, index }">
-            <v-chip class="ma-2" close color="black" text-color="white" @click:close="removeFilter(index)"
-            close-icon="mdi-close">
+            <v-chip
+              class="ma-2"
+              close
+              color="black"
+              text-color="white"
+              @click:close="removeFilter(index)"
+              close-icon="mdi-close"
+            >
               {{ item.name }}{{ item.name ? ":" : "" }}{{ item.value }}
             </v-chip>
           </template>
@@ -33,7 +39,7 @@ import Vuetify from "vuetify";
 import Vue from "vue";
 import Snackbar from "@/modules/shared/components/Snackbar/Snackbar.vue";
 import { mapGetters } from "vuex";
-import store from "@/store"
+import store from "@/store";
 import { DashboardService } from "../DashboardService";
 
 Vue.use(Vuetify);
@@ -41,88 +47,98 @@ Vue.use(Vuetify);
   name: "MainSearchPanel",
   computed: {
     ...mapGetters({
-      currentFilters: "getCurrentFilters"
-    })
-  }
+      currentFilters: "getCurrentFilters",
+    }),
+  },
 })
 export default class MainSearchPanel extends Vue {
-
   @Inject() dashboardService!: DashboardService;
 
-  model: {key: string, parentKey: string, value: string}[] = []
-  currentFilters!: {key: string, parentKey: string, value: string}[]
+  model: { key: string; parentKey: string; value: string }[] = [];
+  currentFilters!: { key: string; parentKey: string; value: string }[];
 
-  mounted(){
-    this.model = this.currentFilters
+  mounted() {
+    this.model = this.currentFilters;
   }
 
   @Watch("model")
-  addFilterFromBar(val:any, prev:any){
-    if (val.length === prev.length) return
+  addFilterFromBar(val: any, prev: any) {
+    if (val.length === prev.length) return;
 
-    this.model = val.map((item:any) => {
-      if(typeof item === 'string'){
-        item = this.buildFilter(item)
+    this.model = val.map((item: any) => {
+      if (typeof item === "string") {
+        item = this.buildFilter(item);
       }
-      return item
-    })
+      return item;
+    });
   }
 
   @Watch("currentFilters")
-  addCustomFilter(){
-    const newFilters: { key: string, parentKey: string, value: string }[] = []
-    this.currentFilters.forEach(filter => {
-      const index = this.model.findIndex((currentFilter) => currentFilter.key === filter.key)
-      if(index === -1) {
-        newFilters.push(filter)
+  addCustomFilter() {
+    const newFilters: { key: string; parentKey: string; value: string }[] = [];
+    this.currentFilters.forEach((filter) => {
+      const index = this.model.findIndex(
+        (currentFilter) => currentFilter.key === filter.key
+      );
+      if (index === -1) {
+        newFilters.push(filter);
       } else {
-        this.model[index].value = filter.value
+        this.model[index].value = filter.value;
       }
-    })
-    this.model = [ ...this.model, ...newFilters ]
-    this.search()
+    });
+    this.model = [...this.model, ...newFilters];
+    this.search();
   }
 
-  getFilterKeys(key:string){
-    const keys: { [key: string]: () => { key: string, parentKey: string } } = {
-      "nivel-educativo": () =>  ({ key: "Degree_DegreeName", parentKey: "SegregatedQualification"}),
-      "universidad": () => ({ key: "Institution_Name", parentKey: "SegregatedQualification"}),
-      "cargo": () => ({ key: "JobProfile_Title", parentKey: "SegregatedExperience"}),
-      "cargo-actual": () => ({ key: "JobProfile", parentKey: "JobProfile"}),
-      "skill": () => ({ key:"Skill", parentKey: "SegregatedSkill"}),
-      "nombre": () => ({ key:"nombre", parentKey: "PersonalInformation"}),
-      "email": () => ({ key:"email", parentKey: "PersonalInformation"}),
-      "default": () => ({ key:"DetailResume", parentKey: "DetailResume"}),
-    }
+  getFilterKeys(key: string) {
+    const keys: { [key: string]: () => { key: string; parentKey: string } } = {
+      "nivel-educativo": () => ({
+        key: "Degree_DegreeName",
+        parentKey: "SegregatedQualification",
+      }),
+      universidad: () => ({
+        key: "Institution_Name",
+        parentKey: "SegregatedQualification",
+      }),
+      cargo: () => ({
+        key: "JobProfile_Title",
+        parentKey: "SegregatedExperience",
+      }),
+      "cargo-actual": () => ({ key: "JobProfile", parentKey: "JobProfile" }),
+      skill: () => ({ key: "Skill", parentKey: "SegregatedSkill" }),
+      nombre: () => ({ key: "nombre", parentKey: "PersonalInformation" }),
+      email: () => ({ key: "email", parentKey: "PersonalInformation" }),
+      default: () => ({ key: "DetailResume", parentKey: "DetailResume" }),
+    };
 
-    return (keys[key] || keys["default"])()
+    return (keys[key] || keys["default"])();
   }
 
-  buildFilter(filter: string){
+  buildFilter(filter: string) {
     //TODO: Add logic to handle duplicated filter
-    const [ parameter, value ] = filter.split(":")
-    const { key, parentKey } = this.getFilterKeys(parameter)
-    const name = value ? parameter : ""
+    const [parameter, value] = filter.split(":");
+    const { key, parentKey } = this.getFilterKeys(parameter);
+    const name = value ? parameter : "";
 
     const result = {
       key,
       parentKey,
       name,
-      value: value || filter
-    }
+      value: value || filter,
+    };
 
-    store.dispatch("updateFilters", result)
-    return result
+    store.dispatch("updateFilters", result);
+    return result;
   }
 
-  removeFilter(index: number){
-    this.model.splice(index, 1)
-    store.commit("REMOVE_FILTER", index)
+  removeFilter(index: number) {
+    this.model.splice(index, 1);
+    store.commit("REMOVE_FILTER", index);
   }
 
-  clearFilters(){
-    this.model.splice(0)
-    store.commit("CLEAR_FILTERS")
+  clearFilters() {
+    this.model.splice(0);
+    store.commit("CLEAR_FILTERS");
   }
 
   async search() {
@@ -134,31 +150,34 @@ export default class MainSearchPanel extends Vue {
         const response = await this.dashboardService.getFiltersResult(
           searchObject
         );
-        if(response.status === 200 && response.data){
+        if (response.status === 200 && response.data) {
           this.$emit("searchFromBar", response.data);
         } else {
-          Snackbar.popError("Error en la consulta")
+          Snackbar.popError("Error en la consulta");
         }
       }
     } catch (error) {
-      Snackbar.popError("Error en la consulta")
+      Snackbar.popError("Error en la consulta");
     }
-
   }
 
-  buildSearchObject(){
+  buildSearchObject() {
     const searchItemsArray: any[] = [];
-    const filtersObjectArray = this.buildFiltersObjectArray(this.model)
-    const parentKeys = filtersObjectArray.map((item: any) => Object.keys(item)[0]);
-    const uniqueParentKeys = [
-      ...new Set(parentKeys),
-    ];
+    const filtersObjectArray = this.buildFiltersObjectArray(this.model);
+    const parentKeys = filtersObjectArray.map(
+      (item: any) => Object.keys(item)[0]
+    );
+    const uniqueParentKeys = [...new Set(parentKeys)];
 
     uniqueParentKeys.forEach((key: string) => {
-      const matchingSearchItems = filtersObjectArray.filter((item: any) => key in item);
+      const matchingSearchItems = filtersObjectArray.filter(
+        (item: any) => key in item
+      );
       const searchItemKeys = matchingSearchItems.map((item: any) => item[key]);
       const formattedSearchItem = {
-        [key]: ["DetailResume", "JobProfile"].includes(key) ? searchItemKeys[0] : searchItemKeys,
+        [key]: ["DetailResume", "JobProfile"].includes(key)
+          ? searchItemKeys[0]
+          : searchItemKeys,
       };
 
       searchItemsArray.push(formattedSearchItem);
@@ -170,27 +189,25 @@ export default class MainSearchPanel extends Vue {
   buildFiltersObjectArray(filtersArray: any) {
     const filtersObjectArray: any[] = [];
     filtersArray.forEach((item: any) => {
-      if(item.parentKey === item.key) {
+      if (item.parentKey === item.key) {
         filtersObjectArray.push({ [item.key]: item.value });
-      } else{
+      } else {
         const [key, subKey] = item.key.split("_");
-        const filterObject: any =
-          subKey
-            ? {
-                [item.parentKey]: {
-                  [key]: {
-                    [subKey]: item.value,
-                  },
+        const filterObject: any = subKey
+          ? {
+              [item.parentKey]: {
+                [key]: {
+                  [subKey]: item.value,
                 },
-              }
-            : {
-                [item.parentKey]: {
-                  [key]: item.value,
-                },
-              };
+              },
+            }
+          : {
+              [item.parentKey]: {
+                [key]: item.value,
+              },
+            };
         filtersObjectArray.push(filterObject);
       }
-
     });
     return filtersObjectArray;
   }
@@ -205,5 +222,4 @@ export default class MainSearchPanel extends Vue {
 }
 </script>
 
-<style>
-</style>
+<style></style>

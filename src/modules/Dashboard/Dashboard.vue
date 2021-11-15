@@ -41,30 +41,33 @@
 
             <v-col cols="auto" align-self="center">
               <v-row align-content="center">
-              <v-btn :class="secondaryBtnClass" @click="exportCandidatesFile" :disabled="selectedCandidatesCount < 1">
-                <v-icon>mdi-tray-arrow-down</v-icon>
-                Descargar
-              </v-btn>
+                <v-btn
+                  :class="secondaryBtnClass"
+                  @click="exportCandidatesFile"
+                  :disabled="selectedCandidatesCount < 1"
+                >
+                  <v-icon>mdi-tray-arrow-down</v-icon>
+                  Descargar
+                </v-btn>
 
-              <v-pagination
-                v-model="page"
-                :length="candidatesPagsLength"
-                :total-visible="5"
-                :color="primaryColor"
-                circle
-              ></v-pagination>
+                <v-pagination
+                  v-model="page"
+                  :length="candidatesPagsLength"
+                  :total-visible="5"
+                  :color="primaryColor"
+                  circle
+                ></v-pagination>
               </v-row>
             </v-col>
           </v-row>
           <v-row justify="end" class="mr-5">
             <v-col cols="auto" align-self="center" class="pa-0">
-                  <v-checkbox
-                    :label="`Seleccionar todos (${selectedCandidatesCount} seleccionados)`"
-                    v-model="allSelected"
-                    :color="primaryColor"
-                  ></v-checkbox>
+              <v-checkbox
+                :label="`Seleccionar todos (${selectedCandidatesCount} seleccionados)`"
+                v-model="allSelected"
+                :color="primaryColor"
+              ></v-checkbox>
             </v-col>
-
           </v-row>
           <v-row>
             <v-col
@@ -122,7 +125,7 @@ import { Component, Inject, Watch } from "vue-property-decorator";
 import CandidateCard from "./components/CandidateCard.vue";
 import MainSearchPanel from "./components/MainSearchPanel.vue";
 import Snackbar from "../shared/components/Snackbar/Snackbar.vue";
-import Filters from "./components/Filters.vue"
+import Filters from "./components/Filters.vue";
 import Vuetify from "vuetify";
 import Vue from "vue";
 import { DashboardService } from "@/modules/Dashboard/DashboardService";
@@ -130,7 +133,7 @@ import { mapState } from "vuex";
 import { Candidate } from "../Candidate/models/Candidate";
 import moment from "moment";
 import { COLORS, STYLE_CLASSES } from "@/shared/StyleConstants";
-import store from "@/store"
+import store from "@/store";
 
 Vue.use(Vuetify);
 @Component({
@@ -138,19 +141,18 @@ Vue.use(Vuetify);
   components: {
     CandidateCard,
     MainSearchPanel,
-    Filters
+    Filters,
   },
   computed: mapState(["currentSearch"]),
 })
 export default class Dashboard extends Vue {
-
   public currentSearch!: [];
 
   @Inject() dashboardService!: DashboardService;
 
   primaryBtnClass = STYLE_CLASSES.PRIMARY_BTN;
   primaryFabBtnClass = STYLE_CLASSES.PRIMARY_BTN_COMMON;
-  secondaryBtnClass = STYLE_CLASSES.SECONDARY_BTN
+  secondaryBtnClass = STYLE_CLASSES.SECONDARY_BTN;
   primaryColor = COLORS.PRIMARY_COLOR;
   secondaryColor = COLORS.SECONDARY_COLOR;
   workspaceColor = COLORS.WORKSPACE_COLOR;
@@ -315,7 +317,7 @@ export default class Dashboard extends Vue {
     this.isGridActive = false;
   }
 
-   get gridCardsCnt() {
+  get gridCardsCnt() {
     switch (this.$vuetify.breakpoint.name) {
       case "xs":
         return "12";

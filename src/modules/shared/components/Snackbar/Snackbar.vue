@@ -7,12 +7,12 @@
       bottom
       :color="snackbarColor"
     >
-    <div class="snackbar__wrapper">
-      <v-icon class="mr-4">{{ icon }}</v-icon>
-      <span>
-       {{ message }}
-      </span>
-    </div>
+      <div class="snackbar__wrapper">
+        <v-icon class="mr-4">{{ icon }}</v-icon>
+        <span>
+          {{ message }}
+        </span>
+      </div>
       <template v-slot:action="{ attrs }">
         <v-btn
           id="snackbarCloseBtn"
@@ -28,16 +28,15 @@
 </template>
 
 <script lang="ts">
-
 import { Component } from "vue-property-decorator";
 import Vuetify from "vuetify";
 import Vue from "vue";
-import { eventBus } from "../../../../main"
+import { eventBus } from "../../../../main";
 import { COLORS } from "@/shared/StyleConstants";
 
 Vue.use(Vuetify);
 @Component({
-  name: "Snackbar"
+  name: "Snackbar",
 })
 export default class Snackbar extends Vue {
   snackbar = false;
@@ -46,7 +45,7 @@ export default class Snackbar extends Vue {
   snackbarColor = "";
 
   mounted() {
-    eventBus.$on('SnackData', (payload: any) => {
+    eventBus.$on("SnackData", (payload: any) => {
       this.message = payload.msg;
       this.icon = payload.icon;
       this.snackbarColor = payload.color;
@@ -55,34 +54,34 @@ export default class Snackbar extends Vue {
   }
 
   static popSuccess(msg: string) {
-    eventBus.$emit('SnackData', {
+    eventBus.$emit("SnackData", {
       msg,
-      icon: 'mdi-check',
-      color: COLORS.SUCCESS
+      icon: "mdi-check",
+      color: COLORS.SUCCESS,
     });
   }
 
   static popWarning(msg: string) {
-    eventBus.$emit('SnackData', {
+    eventBus.$emit("SnackData", {
       msg,
-      icon: 'mdi-alert',
-      color: COLORS.WARNING
+      icon: "mdi-alert",
+      color: COLORS.WARNING,
     });
   }
 
   static popError(msg: string) {
-    eventBus.$emit('SnackData', {
+    eventBus.$emit("SnackData", {
       msg,
-      icon: 'mdi-close-circle',
-      color: COLORS.ERROR
+      icon: "mdi-close-circle",
+      color: COLORS.ERROR,
     });
   }
 
   static popInfo(msg: string) {
-    eventBus.$emit('SnackData', {
+    eventBus.$emit("SnackData", {
       msg,
-      icon: 'mdi-information',
-      color: COLORS.INFO
+      icon: "mdi-information",
+      color: COLORS.INFO,
     });
   }
 

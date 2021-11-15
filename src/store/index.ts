@@ -8,7 +8,12 @@ export default new Vuex.Store({
   state: {
     user: null,
     currentSearch: [],
-    currentFilters: [] as { key: string, parentKey: string, value: string, name: string }[]
+    currentFilters: [] as {
+      key: string;
+      parentKey: string;
+      value: string;
+      name: string;
+    }[],
   },
   mutations: {
     SET_USER_DATA(state, userData) {
@@ -22,22 +27,22 @@ export default new Vuex.Store({
       localStorage.removeItem("user");
       location.reload();
     },
-    SET_CURRENT_SEARCH(state, candidates){
+    SET_CURRENT_SEARCH(state, candidates) {
       state.currentSearch = candidates;
     },
-    ADD_FILTER(state, filter){
-      state.currentFilters.push(filter)
+    ADD_FILTER(state, filter) {
+      state.currentFilters.push(filter);
     },
-    UPDATE_FILTER(state, payload){
-      const { index, newFilter } = payload
-      state.currentFilters.splice(index, 1, newFilter)
+    UPDATE_FILTER(state, payload) {
+      const { index, newFilter } = payload;
+      state.currentFilters.splice(index, 1, newFilter);
     },
-    REMOVE_FILTER(state, index){
-      state.currentFilters.splice(index, 1)
+    REMOVE_FILTER(state, index) {
+      state.currentFilters.splice(index, 1);
     },
-    CLEAR_FILTERS(state){
-      state.currentFilters.splice(0)
-    }
+    CLEAR_FILTERS(state) {
+      state.currentFilters.splice(0);
+    },
   },
   actions: {
     login({ commit }, googleToken) {
@@ -61,20 +66,23 @@ export default new Vuex.Store({
     logout({ commit }, payload) {
       commit("CLEAR_USER_DATA");
     },
-    updateSearch({ commit }, candidates){
-      commit("SET_CURRENT_SEARCH", candidates)
+    updateSearch({ commit }, candidates) {
+      commit("SET_CURRENT_SEARCH", candidates);
     },
-    updateFilters({ state, commit }, newFilter){
-      const index = state.currentFilters.findIndex((filter) => filter.key === newFilter.key);
-      index === -1 ? commit("ADD_FILTER", newFilter) : commit("UPDATE_FILTER", {index, newFilter})
-    }
-
+    updateFilters({ state, commit }, newFilter) {
+      const index = state.currentFilters.findIndex(
+        (filter) => filter.key === newFilter.key
+      );
+      index === -1
+        ? commit("ADD_FILTER", newFilter)
+        : commit("UPDATE_FILTER", { index, newFilter });
+    },
   },
   getters: {
     loggedIn(state) {
       return !!state.user;
     },
-    getCurrentFilters: state => state.currentFilters
+    getCurrentFilters: (state) => state.currentFilters,
   },
   modules: {},
 });

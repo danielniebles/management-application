@@ -21,10 +21,7 @@
           <v-col :cols="isGridActive ? '12' : 'auto'" align-self="center">
             <v-row justify="center">
               <v-avatar size="140">
-                <img
-                  src="../../../assets/photo-placeholder.svg"
-                  alt="John"
-                />
+                <img src="../../../assets/photo-placeholder.svg" alt="John" />
               </v-avatar>
             </v-row>
           </v-col>
@@ -123,10 +120,10 @@ export default class CanditateCard extends Vue {
   }
 
   get candidateInfo() {
-    const [ name ] = this.candidatesInfo.Name;
-    const [ country ] = this.candidatesInfo.ResumeCountry;
-    const [ experience ] = this.candidatesInfo.WorkedPeriod;
-    const [ phone ] = this.candidatesInfo.PhoneNumber;
+    const [name] = this.candidatesInfo.Name;
+    const [country] = this.candidatesInfo.ResumeCountry;
+    const [experience] = this.candidatesInfo.WorkedPeriod;
+    const [phone] = this.candidatesInfo.PhoneNumber;
     return {
       name: name.FormattedName ?? "",
       country: country.Country || "Colombia",
