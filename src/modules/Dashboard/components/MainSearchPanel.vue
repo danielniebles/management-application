@@ -141,10 +141,24 @@ export default class MainSearchPanel extends Vue {
   }
 
   search() {
-    //console.log(this.currentFilter);
-    //console.log(this.filtersList);
-    const test = this.buildFiltersObjectArray(this.model)
-    console.log(test);
+    const searchItemsArray: any[] = [];
+    const filtersObjectArray = this.buildFiltersObjectArray(this.model)
+    const parentKeys = filtersObjectArray.map((item: any) => Object.keys(item));
+    const parentKeysArray = [
+      ...new Set(parentKeys.map((element: any) => element[0])),
+    ];
+
+    parentKeysArray.forEach((key: string) => {
+      const matchingSearchItems = filtersObjectArray.filter((item: any) => key in item);
+      const searchItemKeys = matchingSearchItems.map((item: any) => item[key]);
+      const formattedSearchItem = {
+        [key]: searchItemKeys,
+      };
+
+      searchItemsArray.push(formattedSearchItem);
+    });
+
+    console.log(searchItemsArray)
 
   }
 
