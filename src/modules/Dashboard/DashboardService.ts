@@ -15,7 +15,7 @@ export class DashboardService {
     }
     const response = await axios.request(config)
 
-    return response.data
+    return response
   }
 
   async getCandidateInfo(id: string) {

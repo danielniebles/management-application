@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="filters__container">
+    <h6 class="text-h6 pb-6">Filtros</h6>
     <div v-for="(operation, index) in operations" :key="index">
       <p class="text-subtitle-1">{{ operation.displayName }}</p>
       <div v-for="(option, subIndex) in operation.options" :key="subIndex" class="filter__container">
@@ -10,6 +11,7 @@
           color="black"
           single-line
           background-color="white"
+          @keyup.enter="addFilter(subIndex, index)"
         >
         </v-text-field>
         <v-btn fab small class="ma-2" v-blur :color="primaryColor" @click="addFilter(subIndex, index)">
@@ -39,6 +41,19 @@ export default class Filters extends Vue {
 
   emitObject = {};
   operations = [
+    {
+      rchilliKey: "JobProfile",
+      displayName: "Cargo actual",
+      rchilliType: "arrayObject",
+      options: [
+        {
+          rchilliKey: "JobProfile",
+          displayName: "Cargo actual",
+          name: "cargo-actual",
+          value: "",
+        }
+      ],
+    },
     {
       rchilliKey: "SegregatedQualification",
       displayName: "Formación",
@@ -148,8 +163,9 @@ export default class Filters extends Vue {
   display: flex;
 }
 
-.v-input__slot{
-  height: 48px !important;
+.filters__container {
+  padding: 18px;
+  height: 100%;
 }
 
 </style>

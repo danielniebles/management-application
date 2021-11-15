@@ -2,23 +2,6 @@
   <div>
     <v-row class="mt-1">
       <v-col cols="12" justify="end">
-        <!-- <v-text-field
-          outlined
-          single-line
-          color="black"
-          @keyup.enter="onEnter"
-          v-model="searchPattern"
-          label="Buscar..."
-        >
-        <template v-slot:prepend-inner>
-            <v-icon>mdi-magnify</v-icon>
-          </template>
-          <template v-slot:append>
-            <v-icon>mdi-tune</v-icon>
-          </template>
-        </v-text-field> -->
-        <pre>currentFilters{{ currentFilters}}</pre>
-        <pre>model{{ model }}</pre>
         <v-combobox
           outlined
           color="black"
@@ -33,7 +16,8 @@
           @click:clear="clearFilters"
         >
           <template v-slot:selection="{ item, index }">
-            <v-chip class="ma-2" close color="black" text-color="white" @click:close="removeFilter(index)">
+            <v-chip class="ma-2" close color="black" text-color="white" @click:close="removeFilter(index)"
+            close-icon="mdi-close">
               {{ item.name }}{{ item.name ? ":" : "" }}{{ item.value }}
             </v-chip>
           </template>
@@ -44,12 +28,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Watch } from "vue-property-decorator";
+import { Component, Inject, Prop, Watch } from "vue-property-decorator";
 import Vuetify from "vuetify";
 import Vue from "vue";
 import Snackbar from "@/modules/shared/components/Snackbar/Snackbar.vue";
 import { mapGetters } from "vuex";
 import store from "@/store"
+import { DashboardService } from "../DashboardService";
 
 Vue.use(Vuetify);
 @Component({
@@ -61,6 +46,9 @@ Vue.use(Vuetify);
   }
 })
 export default class MainSearchPanel extends Vue {
+
+  @Inject() dashboardService!: DashboardService;
+
   searchPattern = "";
   items = ["Profesión", "Nombre"];
   filtersList = [];
@@ -95,7 +83,7 @@ export default class MainSearchPanel extends Vue {
         this.model[index].value = filter.value
       }
     })
-    this.model = [ ...this.model, ...newFilters]
+    this.model = [ ...this.model, ...newFilters ]
     this.search()
   }
 
@@ -104,6 +92,7 @@ export default class MainSearchPanel extends Vue {
       "nivel-educativo": () =>  ({ key: "Degree_DegreeName", parentKey: "SegregatedQualification"}),
       "universidad": () => ({ key: "Degree_DegreeName", parentKey: "SegregatedQualification"}),
       "cargo": () => ({ key: "JobProfile_Title", parentKey: "SegregatedExperience"}),
+      "cargo-actual": () => ({ key: "JobProfile", parentKey: "JobProfile"}),
       "skill": () => ({ key:"Skill", parentKey: "SegregatedSkill"}),
       "nombre": () => ({ key:"nombre", parentKey: "PersonalInformation"}),
       "email": () => ({ key:"email", parentKey: "PersonalInformation"}),
@@ -140,50 +129,85 @@ export default class MainSearchPanel extends Vue {
     store.commit("CLEAR_FILTERS")
   }
 
-  search() {
+  async search() {
+    const searchObject = this.buildSearchObject();
+    console.log("searchObject",searchObject)
+
+    try {
+      if (Object.keys(searchObject).length !== 0) {
+        this.$emit("searchFromFiltersPanel");
+        const response = await this.dashboardService.getFiltersResult(
+          searchObject
+        );
+        console.log(response);
+
+        if(response.status === 200 && response.data){
+          this.$emit("searchFromFiltersPanel", response.data);
+        } else {
+          Snackbar.popError("Error en la consulta")
+        }
+      }
+    } catch (error) {
+      Snackbar.popError("Error en la consulta")
+    }
+
+  }
+
+  buildSearchObject(){
     const searchItemsArray: any[] = [];
     const filtersObjectArray = this.buildFiltersObjectArray(this.model)
-    const parentKeys = filtersObjectArray.map((item: any) => Object.keys(item));
-    const parentKeysArray = [
-      ...new Set(parentKeys.map((element: any) => element[0])),
+    const parentKeys = filtersObjectArray.map((item: any) => Object.keys(item)[0]);
+    const uniqueParentKeys = [
+      ...new Set(parentKeys),
     ];
 
-    parentKeysArray.forEach((key: string) => {
+    uniqueParentKeys.forEach((key: string) => {
       const matchingSearchItems = filtersObjectArray.filter((item: any) => key in item);
       const searchItemKeys = matchingSearchItems.map((item: any) => item[key]);
       const formattedSearchItem = {
-        [key]: searchItemKeys,
+        [key]: ["DetailResume", "JobProfile"].includes(key) ? searchItemKeys[0] : searchItemKeys,
       };
 
       searchItemsArray.push(formattedSearchItem);
     });
 
-    console.log(searchItemsArray)
-
+    return this.createObjectFromArray(searchItemsArray);
   }
 
   buildFiltersObjectArray(filtersArray: any) {
     const filtersObjectArray: any[] = [];
     filtersArray.forEach((item: any) => {
-      const [key, subKey] = item.key.split("_");
-      const filterObject: any =
-        subKey
-          ? {
-              [item.parentKey]: {
-                [key]: {
-                  [subKey]: item.value,
+      if(item.parentKey === item.key) {
+        filtersObjectArray.push({ [item.key]: item.value });
+      } else{
+        const [key, subKey] = item.key.split("_");
+        const filterObject: any =
+          subKey
+            ? {
+                [item.parentKey]: {
+                  [key]: {
+                    [subKey]: item.value,
+                  },
                 },
-              },
-            }
-          : {
-              [item.parentKey]: {
-                [key]: item.value,
-              },
-            };
+              }
+            : {
+                [item.parentKey]: {
+                  [key]: item.value,
+                },
+              };
+        filtersObjectArray.push(filterObject);
+      }
 
-      filtersObjectArray.push(filterObject);
     });
     return filtersObjectArray;
+  }
+
+  createObjectFromArray(inputArray: any[]) {
+    const dataObject: any = {};
+    inputArray.forEach((item: any) => {
+      Object.assign(dataObject, item);
+    });
+    return dataObject;
   }
 
 

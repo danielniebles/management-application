@@ -2,17 +2,14 @@
   <div class="pa-0 dashboard__container">
     <v-row justify="center">
       <v-container>
-        <MainSearchPanel @onSearchEnter="onSearchEnter"></MainSearchPanel>
+        <MainSearchPanel @searchFromFiltersPanel="searchFromFiltersPanel"></MainSearchPanel>
       </v-container>
     </v-row>
     <v-divider></v-divider>
     <v-container fluid class="workspace__container">
       <v-row>
         <v-col cols="12" md="3">
-          <FiltersPanel
-            :topSearch="topSearch"
-            @searchFromFiltersPanel="searchFromFiltersPanel"
-          ></FiltersPanel>
+          <Filters></Filters>
         </v-col>
         <v-divider vertical></v-divider>
         <v-col cols="12" class="mt-5" md="9">
@@ -126,6 +123,7 @@ import FiltersPanel from "./components/FiltersPanel.vue";
 import CandidateCard from "./components/CandidateCard.vue";
 import MainSearchPanel from "./components/MainSearchPanel.vue";
 import Snackbar from "../shared/components/Snackbar/Snackbar.vue";
+import Filters from "./components/Filters.vue"
 import Vuetify from "vuetify";
 import Vue from "vue";
 import { DashboardService } from "@/modules/Dashboard/DashboardService";
@@ -141,6 +139,7 @@ Vue.use(Vuetify);
     FiltersPanel,
     CandidateCard,
     MainSearchPanel,
+    Filters
   },
   computed: mapState(["currentSearch"]),
 })
@@ -179,21 +178,9 @@ export default class Dashboard extends Vue {
     return candidates.slice((page - 1) * perPage, page * perPage);
   }
 
-  async onSearchEnter(searchPattern: string) {
-    this.loadingData = true;
-    this.candidates = await this.dashboardService.getFiltersResult({
-      ["DetailResume"]: searchPattern,
-    });
-    this.candidates.forEach((candidate) =>
-      Vue.set(candidate, "selected", false)
-    );
-    this.topSearch = searchPattern;
-    this.page = 1;
-    this.$store.dispatch("updateSearch", this.candidates);
-    this.loadingData = false;
-  }
-
   searchFromFiltersPanel(candidates: Candidate[]) {
+    console.log("called");
+
     if (candidates) {
       this.candidates.length = 0;
       candidates.forEach((candidate) => Vue.set(candidate, "selected", false));
@@ -345,12 +332,6 @@ export default class Dashboard extends Vue {
       default:
         return "2";
     }
-  }
-
-  @Watch("$vuetify.breakpoint.name")
-  hola(){
-    console.log(this.$vuetify.breakpoint.name);
-
   }
 }
 </script>
