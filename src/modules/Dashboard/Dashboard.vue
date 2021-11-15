@@ -2,7 +2,7 @@
   <div class="pa-0 dashboard__container">
     <v-row justify="center">
       <v-container>
-        <MainSearchPanel @searchFromFiltersPanel="searchFromFiltersPanel"></MainSearchPanel>
+        <MainSearchPanel @searchFromBar="searchFromBar"></MainSearchPanel>
       </v-container>
     </v-row>
     <v-divider></v-divider>
@@ -119,7 +119,6 @@
 
 <script lang="ts">
 import { Component, Inject, Watch } from "vue-property-decorator";
-import FiltersPanel from "./components/FiltersPanel.vue";
 import CandidateCard from "./components/CandidateCard.vue";
 import MainSearchPanel from "./components/MainSearchPanel.vue";
 import Snackbar from "../shared/components/Snackbar/Snackbar.vue";
@@ -131,12 +130,12 @@ import { mapState } from "vuex";
 import { Candidate } from "../Candidate/models/Candidate";
 import moment from "moment";
 import { COLORS, STYLE_CLASSES } from "@/shared/StyleConstants";
+import store from "@/store"
 
 Vue.use(Vuetify);
 @Component({
   name: "Dashboard",
   components: {
-    FiltersPanel,
     CandidateCard,
     MainSearchPanel,
     Filters
@@ -144,7 +143,9 @@ Vue.use(Vuetify);
   computed: mapState(["currentSearch"]),
 })
 export default class Dashboard extends Vue {
+
   public currentSearch!: [];
+
   @Inject() dashboardService!: DashboardService;
 
   primaryBtnClass = STYLE_CLASSES.PRIMARY_BTN;
@@ -158,7 +159,6 @@ export default class Dashboard extends Vue {
   page = 1;
   perPage = 12;
   length = 0;
-  topSearch = "";
   loadingData = true;
   dialog = false;
   file: File = {} as unknown as File;
@@ -178,14 +178,12 @@ export default class Dashboard extends Vue {
     return candidates.slice((page - 1) * perPage, page * perPage);
   }
 
-  searchFromFiltersPanel(candidates: Candidate[]) {
-    console.log("called");
-
+  searchFromBar(candidates: Candidate[]) {
     if (candidates) {
       this.candidates.length = 0;
       candidates.forEach((candidate) => Vue.set(candidate, "selected", false));
       this.candidates = candidates;
-      this.$store.dispatch("updateSearch", this.candidates);
+      store.dispatch("updateSearch", this.candidates);
       this.page = 1;
       this.loadingData = false;
     } else {

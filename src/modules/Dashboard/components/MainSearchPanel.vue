@@ -49,11 +49,7 @@ export default class MainSearchPanel extends Vue {
 
   @Inject() dashboardService!: DashboardService;
 
-  searchPattern = "";
-  items = ["Profesión", "Nombre"];
-  filtersList = [];
   model: {key: string, parentKey: string, value: string}[] = []
-  currentFilter = null;
   currentFilters!: {key: string, parentKey: string, value: string}[]
 
   mounted(){
@@ -90,7 +86,7 @@ export default class MainSearchPanel extends Vue {
   getFilterKeys(key:string){
     const keys: { [key: string]: () => { key: string, parentKey: string } } = {
       "nivel-educativo": () =>  ({ key: "Degree_DegreeName", parentKey: "SegregatedQualification"}),
-      "universidad": () => ({ key: "Degree_DegreeName", parentKey: "SegregatedQualification"}),
+      "universidad": () => ({ key: "Institution_Name", parentKey: "SegregatedQualification"}),
       "cargo": () => ({ key: "JobProfile_Title", parentKey: "SegregatedExperience"}),
       "cargo-actual": () => ({ key: "JobProfile", parentKey: "JobProfile"}),
       "skill": () => ({ key:"Skill", parentKey: "SegregatedSkill"}),
@@ -131,18 +127,15 @@ export default class MainSearchPanel extends Vue {
 
   async search() {
     const searchObject = this.buildSearchObject();
-    console.log("searchObject",searchObject)
 
     try {
       if (Object.keys(searchObject).length !== 0) {
-        this.$emit("searchFromFiltersPanel");
+        this.$emit("searchFromBar");
         const response = await this.dashboardService.getFiltersResult(
           searchObject
         );
-        console.log(response);
-
         if(response.status === 200 && response.data){
-          this.$emit("searchFromFiltersPanel", response.data);
+          this.$emit("searchFromBar", response.data);
         } else {
           Snackbar.popError("Error en la consulta")
         }
@@ -209,8 +202,6 @@ export default class MainSearchPanel extends Vue {
     });
     return dataObject;
   }
-
-
 }
 </script>
 

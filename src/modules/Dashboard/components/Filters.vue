@@ -23,11 +23,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Watch } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 import Vuetify from "vuetify";
 import Vue from "vue";
 import { eventBus } from "../../../main";
-import { COLORS, STYLE_CLASSES } from "@/shared/StyleConstants";
+import { COLORS } from "@/shared/StyleConstants";
 import store from "@/store"
 
 Vue.use(Vuetify);
@@ -35,7 +35,6 @@ Vue.use(Vuetify);
   name: "Filters",
 })
 export default class Filters extends Vue {
-  @Prop() private cleanFlag!: boolean;
 
   primaryColor = COLORS.PRIMARY_COLOR
 
@@ -119,16 +118,6 @@ export default class Filters extends Vue {
       ],
     },
   ];
-  headerIcon: boolean[] = Array(this.operations.length).fill(false);
-  icon: string[] = Array(this.operations.length).fill("mdi-chevron-right");
-
-  toggleIcon(index: number) {
-    this.headerIcon[index] = !this.headerIcon[index];
-    this.icon[index] =
-      this.headerIcon[index] === false
-        ? "mdi-chevron-right"
-        : "mdi-chevron-down";
-  }
 
   addFilter(subIndex: number, index: number) {
     this.emitObject = {
@@ -138,22 +127,10 @@ export default class Filters extends Vue {
       name: this.operations[index].options[subIndex].name
     };
 
-    //console.log(this.emitObject);
     this.operations[index].options[subIndex].value = ""
-
 
     eventBus.$emit("filterAdded", this.emitObject);
     store.dispatch("updateFilters", this.emitObject)
-  }
-
-  @Watch("cleanFlag")
-  cleanFields() {
-    this.operations.forEach((operation) => {
-      operation.options.forEach((option) => {
-        option.value = "";
-      });
-    });
-    eventBus.$emit("cleanedFields");
   }
 }
 </script>
