@@ -6,7 +6,11 @@
       elevate-on-scroll
       v-if="this.$router.currentRoute.name !== 'Login'"
     >
-      <img src="../src/assets/main_atome.svg" alt="Logo Atome" />
+      <img
+        src="../src/assets/main_atome.svg"
+        alt="Logo Atome"
+        v-if="this.$router.currentRoute.name !== 'Home'"
+      />
       <v-spacer></v-spacer>
       <v-btn fab small elevation="0" color="white">
         <v-icon>mdi-help-circle-outline</v-icon>

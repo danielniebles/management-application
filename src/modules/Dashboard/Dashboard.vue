@@ -70,10 +70,7 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col
-              cols="12"
-              v-if="candidatesPagsLength === 0 && loadingData === false"
-            >
+            <v-col cols="12" v-if="candidatesPagsLength === 0 && !loadingData">
               <h3>Lo sentimos, tu búsqueda no arrojó resultados</h3>
             </v-col>
             <v-row v-if="!loadingData" class="col-12">
@@ -170,9 +167,7 @@ export default class Dashboard extends Vue {
   isGridActive = false;
 
   async mounted() {
-    this.loadingData = true;
     if (this.currentSearch.length > 0) this.candidates = this.currentSearch;
-    this.loadingData = false;
   }
 
   get shownCandidates() {

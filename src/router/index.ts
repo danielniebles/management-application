@@ -1,7 +1,6 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
-import FiltersPanel from "../modules/Dashboard/components/FiltersPanel.vue";
-import CandidateCard from "../modules/Dashboard/components/CandidateCard.vue";
+import Home from "../modules/Home/Home.vue";
 import Dashboard from "../modules/Dashboard/Dashboard.vue";
 import Login from "../modules/Login/Login.vue";
 import Candidate from "../modules/Candidate/Candidate.vue";
@@ -13,6 +12,12 @@ const routes: Array<RouteConfig> = [
     path: "/dashboard",
     name: "Dashboard",
     component: Dashboard,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/home",
+    name: "Home",
+    component: Home,
     meta: { requiresAuth: true },
   },
   {

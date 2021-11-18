@@ -61,7 +61,10 @@ export default class MainSearchPanel extends Vue {
   currentFilters!: FilterInfo[];
 
   mounted() {
-    this.model = this.currentFilters;
+    if (this.currentFilters.length > 0) {
+      this.model = this.currentFilters;
+      this.search();
+    }
   }
 
   @Watch("model")
@@ -146,6 +149,10 @@ export default class MainSearchPanel extends Vue {
 
   async search() {
     const searchObject = this.buildSearchObject();
+
+    if (this.$route.name === "Home") {
+      this.$router.push({ name: "Dashboard" });
+    }
 
     try {
       if (Object.keys(searchObject).length !== 0) {

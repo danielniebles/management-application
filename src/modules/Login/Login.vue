@@ -51,7 +51,7 @@ export default class Login extends Vue {
   login(idToken: string) {
     this.$store
       .dispatch("login", idToken)
-      .then(() => this.$router.push({ name: "Dashboard" }))
+      .then(() => this.$router.push({ name: "Home" }))
       .catch((error) => {
         Snackbar.popError("Regístrate para poder continuar");
       });
@@ -59,7 +59,7 @@ export default class Login extends Vue {
   register(idToken: string) {
     this.$store
       .dispatch("register", idToken)
-      .then(() => this.$router.push({ name: "Dashboard" }))
+      .then(() => this.$router.push({ name: "Home" }))
       .catch((error) => {
         Snackbar.popError("Ya estás registrado, por favor inicia sesión");
       });
