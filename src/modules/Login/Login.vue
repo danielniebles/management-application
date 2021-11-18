@@ -16,12 +16,14 @@
           <v-card-actions>
             <LoginButton :actionType="LOGIN" @login="login" />
           </v-card-actions>
+          <v-card-actions>
+            <OutlookButton :actionType="LOGIN_OUTLOOK" @loginOutlook="loginOutlook" />
+          </v-card-actions>
 
         </v-row>
         <v-row class="justify-center ma-0">
           <p class="ma-0">ó</p>
         </v-row>
-
         <v-row class="justify-center ma-0">
           <v-card-actions>
             <LoginButton :actionType="REGISTER" @register="register"/>
@@ -37,18 +39,23 @@ import Vuetify from "vuetify";
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import LoginButton from "../Login/components/LoginButton.vue";
+import OutlookButton from "../Login/components/OutlookButton.vue";
 import Snackbar from "../shared/components/Snackbar/Snackbar.vue";
 import { eventBus } from "@/main";
+import { getAuth, signInWithPopup, OAuthProvider } from 'firebase/auth'
+import 'firebase/compat/auth'
 
 Vue.use(Vuetify);
 @Component({
   name: "Login",
   components: {
     LoginButton,
+    OutlookButton
   },
 })
 export default class Login extends Vue {
   LOGIN = "login";
+  LOGIN_OUTLOOK = "loginOutlook";
   REGISTER = "register";
 
   login(idToken: string) {
@@ -70,6 +77,15 @@ export default class Login extends Vue {
   created(){
     eventBus.$on('unauthorized', () => {
       Snackbar.popError('Sesión expirada')
+    })
+  }
+  loginOutlook(){
+    const auth = getAuth()
+    const provider = new OAuthProvider('microsoft.com')
+    signInWithPopup(auth, provider)
+    .then(data => {
+      const credential = OAuthProvider.credentialFromResult(data);
+      this.$router.push({ name: "Dashboard" })
     })
   }
 }
