@@ -32,10 +32,11 @@
 <script lang="ts">
 import Vuetify from "vuetify";
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Inject } from "vue-property-decorator";
 import LoginButton from "../Login/components/LoginButton.vue";
 import Snackbar from "../shared/components/Snackbar/Snackbar.vue";
 import { eventBus } from "@/main";
+import { SegmentService } from "../shared/services/SegmentService";
 
 Vue.use(Vuetify);
 @Component({
@@ -47,6 +48,8 @@ Vue.use(Vuetify);
 export default class Login extends Vue {
   LOGIN = "login";
   REGISTER = "register";
+
+  @Inject() segmentService!: SegmentService;
 
   login(idToken: string) {
     this.$store

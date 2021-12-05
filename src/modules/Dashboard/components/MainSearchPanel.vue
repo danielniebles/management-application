@@ -44,6 +44,7 @@ import { DashboardService } from "../DashboardService";
 import { Filter } from "../models/Filter";
 import { FilterInfo } from "../models/FilterInfo";
 import { ComposedFilter } from "../models/ComposedFilter";
+import { SegmentService } from "../../shared/services/SegmentService";
 
 Vue.use(Vuetify);
 @Component({
@@ -56,6 +57,7 @@ Vue.use(Vuetify);
 })
 export default class MainSearchPanel extends Vue {
   @Inject() dashboardService!: DashboardService;
+  @Inject() segmentService!: SegmentService;
 
   model: FilterInfo[] = [];
   currentFilters!: FilterInfo[];

@@ -20,6 +20,7 @@ import { Component } from "vue-property-decorator";
 import MainSearchPanel from "../Dashboard/components/MainSearchPanel.vue";
 
 @Component({
+  name: "Home",
   components: {
     MainSearchPanel,
   },
