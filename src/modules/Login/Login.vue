@@ -27,7 +27,7 @@
         <v-btn :class="ghostBtnClass + ' ma-4'" text
           >¿Olvidaste tu contraseña?</v-btn
         >
-        <v-btn :class="primaryBtnClass" block> Iniciar sesión </v-btn>
+        <v-btn :class="primaryBtnClass" block>Iniciar sesión</v-btn>
         <v-divider class="my-5"></v-divider>
         <v-btn
           outlined
