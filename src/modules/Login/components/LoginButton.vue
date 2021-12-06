@@ -16,15 +16,15 @@
 import Vuetify from "vuetify";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import Snackbar from "../../shared/components/Snackbar/Snackbar.vue"
+import Snackbar from "../../shared/components/Snackbar/Snackbar.vue";
 
 Vue.use(Vuetify);
 @Component({
   name: "LoginButton",
 })
 export default class LoginButton extends Vue {
-  GoogleSignInButton = require('vue-google-signin-button-directive')
-  
+  GoogleSignInButton = require("vue-google-signin-button-directive");
+
   @Prop() private actionType!: string;
   classType =
     this.actionType === "login" ? "google-btn" : "google-btn-register";
@@ -40,9 +40,8 @@ export default class LoginButton extends Vue {
     this.$emit(this.actionType, idToken);
   }
   OnGoogleAuthFail(error: string) {
-    Snackbar.popError('Error de autenticación de Google');
+    Snackbar.popError("Error de autenticación de Google");
   }
-
 }
 </script>
 

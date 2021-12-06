@@ -2,17 +2,14 @@
   <div class="pa-0 dashboard__container">
     <v-row justify="center">
       <v-container>
-        <MainSearchPanel @onSearchEnter="onSearchEnter"></MainSearchPanel>
+        <MainSearchPanel @searchFromBar="searchFromBar"></MainSearchPanel>
       </v-container>
     </v-row>
     <v-divider></v-divider>
     <v-container fluid class="workspace__container">
       <v-row>
         <v-col cols="12" md="3">
-          <FiltersPanel
-            :topSearch="topSearch"
-            @searchFromFiltersPanel="searchFromFiltersPanel"
-          ></FiltersPanel>
+          <Filters></Filters>
         </v-col>
         <v-divider vertical></v-divider>
         <v-col cols="12" class="mt-5" md="9">
@@ -44,36 +41,36 @@
 
             <v-col cols="auto" align-self="center">
               <v-row align-content="center">
-              <v-btn :class="secondaryBtnClass" @click="exportCandidatesFile" :disabled="selectedCandidatesCount < 1">
-                <v-icon>mdi-tray-arrow-down</v-icon>
-                Descargar
-              </v-btn>
+                <v-btn
+                  :class="secondaryBtnClass"
+                  @click="exportCandidatesFile"
+                  :disabled="selectedCandidatesCount < 1"
+                >
+                  <v-icon>mdi-tray-arrow-down</v-icon>
+                  Descargar
+                </v-btn>
 
-              <v-pagination
-                v-model="page"
-                :length="candidatesPagsLength"
-                :total-visible="5"
-                :color="primaryColor"
-                circle
-              ></v-pagination>
+                <v-pagination
+                  v-model="page"
+                  :length="candidatesPagsLength"
+                  :total-visible="5"
+                  :color="primaryColor"
+                  circle
+                ></v-pagination>
               </v-row>
             </v-col>
           </v-row>
           <v-row justify="end" class="mr-5">
             <v-col cols="auto" align-self="center" class="pa-0">
-                  <v-checkbox
-                    :label="`Seleccionar todos (${selectedCandidatesCount} seleccionados)`"
-                    v-model="allSelected"
-                    :color="primaryColor"
-                  ></v-checkbox>
+              <v-checkbox
+                :label="`Seleccionar todos (${selectedCandidatesCount} seleccionados)`"
+                v-model="allSelected"
+                :color="primaryColor"
+              ></v-checkbox>
             </v-col>
-
           </v-row>
           <v-row>
-            <v-col
-              cols="12"
-              v-if="candidatesPagsLength === 0 && loadingData === false"
-            >
+            <v-col cols="12" v-if="candidatesPagsLength === 0 && !loadingData">
               <h3>Lo sentimos, tu búsqueda no arrojó resultados</h3>
             </v-col>
             <v-row v-if="!loadingData" class="col-12">
@@ -122,10 +119,10 @@
 
 <script lang="ts">
 import { Component, Inject, Watch } from "vue-property-decorator";
-import FiltersPanel from "./components/FiltersPanel.vue";
 import CandidateCard from "./components/CandidateCard.vue";
 import MainSearchPanel from "./components/MainSearchPanel.vue";
 import Snackbar from "../shared/components/Snackbar/Snackbar.vue";
+import Filters from "./components/Filters.vue";
 import Vuetify from "vuetify";
 import Vue from "vue";
 import { DashboardService } from "@/modules/Dashboard/DashboardService";
@@ -133,24 +130,26 @@ import { mapState } from "vuex";
 import { Candidate } from "../Candidate/models/Candidate";
 import moment from "moment";
 import { COLORS, STYLE_CLASSES } from "@/shared/StyleConstants";
+import store from "@/store";
 
 Vue.use(Vuetify);
 @Component({
   name: "Dashboard",
   components: {
-    FiltersPanel,
     CandidateCard,
     MainSearchPanel,
+    Filters,
   },
   computed: mapState(["currentSearch"]),
 })
 export default class Dashboard extends Vue {
   public currentSearch!: [];
+
   @Inject() dashboardService!: DashboardService;
 
   primaryBtnClass = STYLE_CLASSES.PRIMARY_BTN;
   primaryFabBtnClass = STYLE_CLASSES.PRIMARY_BTN_COMMON;
-  secondaryBtnClass = STYLE_CLASSES.SECONDARY_BTN
+  secondaryBtnClass = STYLE_CLASSES.SECONDARY_BTN;
   primaryColor = COLORS.PRIMARY_COLOR;
   secondaryColor = COLORS.SECONDARY_COLOR;
   workspaceColor = COLORS.WORKSPACE_COLOR;
@@ -159,7 +158,6 @@ export default class Dashboard extends Vue {
   page = 1;
   perPage = 12;
   length = 0;
-  topSearch = "";
   loadingData = true;
   dialog = false;
   file: File = {} as unknown as File;
@@ -169,9 +167,7 @@ export default class Dashboard extends Vue {
   isGridActive = false;
 
   async mounted() {
-    this.loadingData = true;
     if (this.currentSearch.length > 0) this.candidates = this.currentSearch;
-    this.loadingData = false;
   }
 
   get shownCandidates() {
@@ -179,26 +175,12 @@ export default class Dashboard extends Vue {
     return candidates.slice((page - 1) * perPage, page * perPage);
   }
 
-  async onSearchEnter(searchPattern: string) {
-    this.loadingData = true;
-    this.candidates = await this.dashboardService.getFiltersResult({
-      ["DetailResume"]: searchPattern,
-    });
-    this.candidates.forEach((candidate) =>
-      Vue.set(candidate, "selected", false)
-    );
-    this.topSearch = searchPattern;
-    this.page = 1;
-    this.$store.dispatch("updateSearch", this.candidates);
-    this.loadingData = false;
-  }
-
-  searchFromFiltersPanel(candidates: Candidate[]) {
+  searchFromBar(candidates: Candidate[]) {
     if (candidates) {
       this.candidates.length = 0;
       candidates.forEach((candidate) => Vue.set(candidate, "selected", false));
       this.candidates = candidates;
-      this.$store.dispatch("updateSearch", this.candidates);
+      store.dispatch("updateSearch", this.candidates);
       this.page = 1;
       this.loadingData = false;
     } else {
@@ -330,7 +312,7 @@ export default class Dashboard extends Vue {
     this.isGridActive = false;
   }
 
-   get gridCardsCnt() {
+  get gridCardsCnt() {
     switch (this.$vuetify.breakpoint.name) {
       case "xs":
         return "12";
@@ -345,12 +327,6 @@ export default class Dashboard extends Vue {
       default:
         return "2";
     }
-  }
-
-  @Watch("$vuetify.breakpoint.name")
-  hola(){
-    console.log(this.$vuetify.breakpoint.name);
-
   }
 }
 </script>

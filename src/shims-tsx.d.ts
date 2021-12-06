@@ -12,6 +12,6 @@ declare global {
   }
 
   interface Navigator {
-    msSaveBlob(prototype: Blob, string): void
+    msSaveBlob(prototype: Blob, string): void;
   }
 }

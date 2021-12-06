@@ -76,7 +76,12 @@
       </v-col>
       <v-col cols="12" md="6">
         <!-- <vue-pdf-app style="height: 100vh" :pdf="fileUrl"></vue-pdf-app> -->
-        <iframe :src="fileUrl" frameborder="0" height="100%" width="100%"></iframe>
+        <iframe
+          :src="fileUrl"
+          frameborder="0"
+          height="100%"
+          width="100%"
+        ></iframe>
       </v-col>
       <v-speed-dial
         v-model="fab"

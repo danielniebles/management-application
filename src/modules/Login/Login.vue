@@ -1,9 +1,7 @@
 <template>
   <v-container class="col-12 container">
     <v-card class="mx-auto my-12" max-width="374">
-      <v-img
-        src="../../assets/logo_atome.png"
-      ></v-img>
+      <v-img src="../../assets/logo_atome.png"></v-img>
       <v-row class="justify-center mt-1">
         <span class="login-card-title">Ingresa a tu cuenta</span>
       </v-row>
@@ -16,7 +14,6 @@
           <v-card-actions>
             <LoginButton :actionType="LOGIN" @login="login" />
           </v-card-actions>
-
         </v-row>
         <v-row class="justify-center ma-0">
           <p class="ma-0">ó</p>
@@ -24,7 +21,7 @@
 
         <v-row class="justify-center ma-0">
           <v-card-actions>
-            <LoginButton :actionType="REGISTER" @register="register"/>
+            <LoginButton :actionType="REGISTER" @register="register" />
           </v-card-actions>
         </v-row>
       </div>
@@ -32,13 +29,14 @@
   </v-container>
 </template>
 
-<script lang="ts" >
+<script lang="ts">
 import Vuetify from "vuetify";
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Inject } from "vue-property-decorator";
 import LoginButton from "../Login/components/LoginButton.vue";
 import Snackbar from "../shared/components/Snackbar/Snackbar.vue";
 import { eventBus } from "@/main";
+import { SegmentService } from "../shared/services/SegmentService";
 
 Vue.use(Vuetify);
 @Component({
@@ -51,26 +49,28 @@ export default class Login extends Vue {
   LOGIN = "login";
   REGISTER = "register";
 
+  @Inject() segmentService!: SegmentService;
+
   login(idToken: string) {
     this.$store
       .dispatch("login", idToken)
-      .then(() => this.$router.push({ name: "Dashboard" }))
-      .catch(error => {
-        Snackbar.popError('Regístrate para poder continuar')
+      .then(() => this.$router.push({ name: "Home" }))
+      .catch((error) => {
+        Snackbar.popError("Regístrate para poder continuar");
       });
   }
-  register(idToken: string){
+  register(idToken: string) {
     this.$store
       .dispatch("register", idToken)
-      .then(() => this.$router.push({ name: "Dashboard" }))
-      .catch(error => {
-        Snackbar.popError('Ya estás registrado, por favor inicia sesión')
+      .then(() => this.$router.push({ name: "Home" }))
+      .catch((error) => {
+        Snackbar.popError("Ya estás registrado, por favor inicia sesión");
       });
   }
-  created(){
-    eventBus.$on('unauthorized', () => {
-      Snackbar.popError('Sesión expirada')
-    })
+  created() {
+    eventBus.$on("unauthorized", () => {
+      Snackbar.popError("Sesión expirada");
+    });
   }
 }
 </script>
@@ -159,7 +159,7 @@ $button-active-blue: #1669f2;
     background: $button-active-blue;
   }
 
-  .logo__container{
+  .logo__container {
     padding: 30px;
   }
 }
