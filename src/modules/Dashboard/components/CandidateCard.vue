@@ -87,7 +87,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Watch } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 import Vuetify from "vuetify";
 import Vue from "vue";
 import { Candidate } from "@/modules/Candidate/models/Candidate";

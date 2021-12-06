@@ -3,6 +3,7 @@ export const STYLE_CLASSES = {
   SECONDARY_BTN: "btn-secondary white--text",
   PRIMARY_BTN_COMMON: "btn-primary white--text",
   OUTLINED_BTN: "btn-outlined",
+  GHOST_BTN: "btn-ghost",
 };
 
 export const TEXT_CLASSES = {
