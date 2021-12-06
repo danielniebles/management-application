@@ -96,6 +96,10 @@ $atome-orange-500: #FF5A34;
   padding: 8px 22px !important;
 }
 
+.btn-ghost {
+  color: $atome-orange-500 !important;
+}
+
 .v-sheet.v-card:not(.v-sheet--outlined) {
   box-shadow: 0px 4px 25px rgba(74, 74, 75, 0.25) !important;
 }
